@@ -1,4 +1,5 @@
-﻿using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping;
+﻿using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.Mapping;
+using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,6 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new CityMap());
-            modelBuilder.Configurations.Add(new Combo_ItemMap());
             modelBuilder.Configurations.Add(new DangerousMaterialIncidentsMap());
             modelBuilder.Configurations.Add(new EnvironmentalDamageIncidentsMap());
             modelBuilder.Configurations.Add(new FinanceIncidentMap());
@@ -66,6 +66,26 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
             modelBuilder.Configurations.Add(new RootMap());
             modelBuilder.Configurations.Add(new SuggestionMap());
             modelBuilder.Configurations.Add(new UserMap());
+            modelBuilder.Configurations.Add(new DangerousMaterialMap());
+            modelBuilder.Configurations.Add(new EmployerTypeMap());
+            modelBuilder.Configurations.Add(new EnvironmentalDamageCategoryMap());
+            modelBuilder.Configurations.Add(new EnvironmentalDamageMap());
+            modelBuilder.Configurations.Add(new FinanceMap());
+            modelBuilder.Configurations.Add(new FormOfChemicalMap());
+            modelBuilder.Configurations.Add(new IgnıtıonMap());
+            modelBuilder.Configurations.Add(new IncidentTypeMap());
+            modelBuilder.Configurations.Add(new IncidentTypeCategoryMap());
+            modelBuilder.Configurations.Add(new NaceMap());
+            modelBuilder.Configurations.Add(new NotificationMap());
+            modelBuilder.Configurations.Add(new OperatingModeMap());
+            modelBuilder.Configurations.Add(new ProcessCategory1Map());
+            modelBuilder.Configurations.Add(new ProcessCategory2Map());
+            modelBuilder.Configurations.Add(new ProcessCategory3Map());
+            modelBuilder.Configurations.Add(new RootCategory1Map());
+            modelBuilder.Configurations.Add(new RootCategory2Map());
+            modelBuilder.Configurations.Add(new RootCategory3Map());
+            modelBuilder.Configurations.Add(new CompanyMap());
+            modelBuilder.Configurations.Add(new CompanyTypeMap());
         }
     }
 }
