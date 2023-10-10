@@ -11,7 +11,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
     public class EmployerTypeMap : EntityTypeConfiguration<EmployerType>
     {
-        public void Configure(EntityTypeBuilder<EmployerType> builder)
+        public EmployerTypeMap()
         {
             ToTable(@"EmployerTypes", "dbo");
             HasKey(x => x.Id);

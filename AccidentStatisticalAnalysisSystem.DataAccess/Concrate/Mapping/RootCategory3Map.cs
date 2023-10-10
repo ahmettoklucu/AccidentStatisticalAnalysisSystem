@@ -9,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class EnvironmentalDamageCategoryMap : EntityTypeConfiguration<EnvironmentalDamageCategory>
+    public class RootCategory3Map:EntityTypeConfiguration<RootCategory3>
     {
-        public EnvironmentalDamageCategoryMap()
+        public RootCategory3Map()
         {
-            ToTable(@"EnvironmentalDamageCategories", "dbo");
+            ToTable(@"ProcesCategory3", "dbo");
             HasKey(x => x.Id);
             Property(x => x.Id).HasColumnName("Id");
             Property(x => x.Name).HasColumnName("Name");
+            Property(x => x.RootCategory2Id).HasColumnName("RootCategory2Id");
+
         }
     }
 }

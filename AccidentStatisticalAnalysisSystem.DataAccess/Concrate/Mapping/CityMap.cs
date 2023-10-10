@@ -12,7 +12,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
     public class CityMap:EntityTypeConfiguration<City>
     {
-        public void Configure(EntityTypeBuilder<City> builder)
+        public  CityMap()
         {
             ToTable(@"Cities", "dbo");
             HasKey(x => x.Id);

@@ -11,7 +11,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
     public class DangerousMaterialMap : EntityTypeConfiguration<DangerousMaterial>
     {
-        public void Configure(EntityTypeBuilder<DangerousMaterial> builder)
+        public  DangerousMaterialMap()
         {
             ToTable(@"DangerousMaterials", "dbo");
             HasKey(x => x.Id);

@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
@@ -8,15 +9,15 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class Combo_ItemMap:EntityTypeConfiguration<Combo_Item>
+    public class NaceMap:EntityTypeConfiguration<Nace>
     {
-        public Combo_ItemMap()
+        public NaceMap()
         {
-            ToTable(@"Combo_Item","dbo");
+            ToTable(@"Naces", "dbo");
             HasKey(x => x.Id);
             Property(x => x.Id).HasColumnName("Id");
-            Property(x=>x.Type).HasColumnName("Type");
-            Property(x=>x.Name).HasColumnName("Name");
+            Property(x => x.Name).HasColumnName("Name");
+
         }
     }
 }
