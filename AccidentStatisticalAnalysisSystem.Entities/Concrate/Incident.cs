@@ -27,9 +27,9 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         [ForeignKey("CityId")]
         public City City { get; set; }
         public bool EnvironmentalDamage { get; set; }
-        public int PropertyDamagerty { get; set; }
+        public double PropertyDamagerty { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; }=DateTime.Now;
         public DateTime Date { get; set; } = DateTime.Now;
         public int OperatingModesId { get; set; }
         public int NotificationId { get; set; }

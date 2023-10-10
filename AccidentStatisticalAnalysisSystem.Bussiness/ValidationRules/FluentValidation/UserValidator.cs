@@ -25,7 +25,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentVali
 
             RuleFor(p => p.Password).MinimumLength(8).WithMessage("Şifre en az 8 karakterden oluşmalıdır.");
             RuleFor(p => p.UserName).MaximumLength(15).WithMessage("Kullanıcı ismi en az 15 karakterden oluşmalıdır.");
-
         }
         private bool NumericControl(string arg)
         {

@@ -23,7 +23,6 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.
             Property(x => x.NumberOfWorkers).HasColumnName("NumberOfWorkers");
             Property(x => x.IsDelete).HasColumnName("IsDelete");
             Property(x=>x.UserId).HasColumnName("UserId");
-            Property(x => x.GUID).HasColumnName("GUID");
             Property(x=>x.Image).HasColumnName("Image");
             Property(x=>x.Status).HasColumnName("Status");
 

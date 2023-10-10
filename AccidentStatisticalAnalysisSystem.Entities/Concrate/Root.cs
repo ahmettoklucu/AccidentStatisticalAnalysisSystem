@@ -16,5 +16,11 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public int RootCategory3Id { get; set; }
         public int RootCategory2Id { get; set; }
         public int RootCategory1Id { get; set; }
+        [ForeignKey("RootCategory3Id")]
+        public RootCategory3 RootCategory3 { get; set; }
+        [ForeignKey("RootCategory2Id")]
+        public RootCategory2 RootCategory2 { get; set; }
+        [ForeignKey("RootCategory1Id")]
+        public RootCategory1 RootCategory1 { get; set; }
     }
 }

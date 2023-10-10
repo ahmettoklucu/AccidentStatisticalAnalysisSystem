@@ -34,13 +34,13 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
             }
         }
 
-        public void DeleteAsyc(TEntity entity)
+        public async void DeleteAsyc(TEntity entity)
         {
             using (TContext context = new TContext())
             {
                 var deleteEntity = context.Entry(entity);
                 deleteEntity.State = EntityState.Deleted;
-                context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
         }
 

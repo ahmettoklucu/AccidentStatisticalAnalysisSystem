@@ -22,15 +22,14 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public int NaceId { get; set; }
         public int CompanyTypeId { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime StartDate { get; set; } 
+        public DateTime StartDate { get; set; } = DateTime.Now;
         public int NumberOfWorkers { get; set; }
         public List<Incident> Incidents { get; set; }
         public bool IsDelete { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
-        public string GUID { get; set; }
         public string Image { get; set; }
-        public int Status { get; set; }
+        public bool Status { get; set; }
     }
 }

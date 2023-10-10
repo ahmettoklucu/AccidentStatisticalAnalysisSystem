@@ -17,5 +17,12 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public int ProcesCategory2Id { get; set; }
         public int ProcesCategory1Id { get; set; }
         public List<ProcesIncident> ProcesIncident { get; set; }
+        [ForeignKey("ProcesCategory3Id")]
+        public ProcesCategory3 ProcesCategory3 { get; set; }
+        [ForeignKey("ProcesCategory2Id")]
+        public ProcesCategory2 ProcesCategory2 { get; set; }
+        [ForeignKey("ProcesCategory1Id")]
+        public ProcesCategory1 ProcesCategory1 { get; set; }
+
     }
 }
