@@ -29,8 +29,8 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
             using (TContext context = new TContext())
             {
                 return filter == null
-                    ? await context.Set<TEntity>().ToListAsync()
-                    : await context.Set<TEntity>().Where(filter).ToListAsync();
+                    ? await context.Set<TEntity>().AsNoTracking().ToListAsync()
+                    : await context.Set<TEntity>().Where(filter).AsNoTracking().ToListAsync();
             }
         }
 

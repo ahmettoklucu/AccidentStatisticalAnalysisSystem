@@ -11,7 +11,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
 {
     public class EnvironmentalDamageIncident : IEntity
     {
-        public int IncidentId { get; set; }
+        public string IncidentId { get; set; }
         [ForeignKey("IncidentId")]
         public Incident Incident { get; set; }
         public int EnvironmentalDamageId { get; set; }

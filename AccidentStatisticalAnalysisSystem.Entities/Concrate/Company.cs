@@ -14,7 +14,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
 {
     public class Company:IEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string CompanyName { get; set; }
         public int CityId { get; set; }
         [ForeignKey("CityId")]
