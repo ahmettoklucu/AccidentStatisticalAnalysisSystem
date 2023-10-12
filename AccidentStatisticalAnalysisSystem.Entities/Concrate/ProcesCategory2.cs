@@ -20,4 +20,4 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public List<ProcesIncident> ProcesIncident { get; set; }
     }
 }
-}
+

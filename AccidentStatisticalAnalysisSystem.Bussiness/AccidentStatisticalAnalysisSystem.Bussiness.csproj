@@ -8,11 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.7.1" />
+    <PackageReference Include="JWT" Version="10.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AccidentStatisticalAnalysisSystem.DataAccess\AccidentStatisticalAnalysisSystem.DataAccess.csproj" />
     <ProjectReference Include="..\AccidentStatisticalAnalysisSystem.Entities\AccidentStatisticalAnalysisSystem.Entities.csproj" />
   </ItemGroup>
 

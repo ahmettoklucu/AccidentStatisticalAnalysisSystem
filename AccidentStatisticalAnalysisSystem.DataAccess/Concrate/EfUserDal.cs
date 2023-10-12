@@ -14,6 +14,6 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
     {
         
 
-      
+
     }
 }

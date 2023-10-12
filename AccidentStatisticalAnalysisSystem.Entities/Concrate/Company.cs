@@ -26,7 +26,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public int NumberOfWorkers { get; set; }
         public List<Incident> Incidents { get; set; }
         public bool IsDelete { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
         public string Image { get; set; }
