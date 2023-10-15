@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccidentStatisticalAnalysisSystem.WepApi", "AccidentStatisticalAnalysisSystem.WepApi\AccidentStatisticalAnalysisSystem.WepApi.csproj", "{AC1C19CA-A907-4AD1-8C3D-95568F3BF5E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccidentStatisticalAnalysisSystem.Entities", "AccidentStatisticalAnalysisSystem.Entities\AccidentStatisticalAnalysisSystem.Entities.csproj", "{C5ECD1F1-86B7-4B1A-8023-301C256771AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentStatisticalAnalysisSystem.Entities", "AccidentStatisticalAnalysisSystem.Entities\AccidentStatisticalAnalysisSystem.Entities.csproj", "{C5ECD1F1-86B7-4B1A-8023-301C256771AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccidentStatisticalAnalysisSystem.Bussiness", "AccidentStatisticalAnalysisSystem.Bussiness\AccidentStatisticalAnalysisSystem.Bussiness.csproj", "{EA2EE99A-A922-472A-8D9B-D977FE6F5286}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentStatisticalAnalysisSystem.Bussiness", "AccidentStatisticalAnalysisSystem.Bussiness\AccidentStatisticalAnalysisSystem.Bussiness.csproj", "{EA2EE99A-A922-472A-8D9B-D977FE6F5286}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccidentStatisticalAnalysisSystem.DataAccess", "AccidentStatisticalAnalysisSystem.DataAccess\AccidentStatisticalAnalysisSystem.DataAccess.csproj", "{FD244DAB-F71E-4F53-8821-4584BD5221D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentStatisticalAnalysisSystem.DataAccess", "AccidentStatisticalAnalysisSystem.DataAccess\AccidentStatisticalAnalysisSystem.DataAccess.csproj", "{FD244DAB-F71E-4F53-8821-4584BD5221D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentStatisticalAnalysisSystem.WepApi", "AccidentStatisticalAnalysisSystem.WWepApi\AccidentStatisticalAnalysisSystem.WepApi.csproj", "{14114EE6-413A-418F-B550-67FE7D892C6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AC1C19CA-A907-4AD1-8C3D-95568F3BF5E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC1C19CA-A907-4AD1-8C3D-95568F3BF5E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC1C19CA-A907-4AD1-8C3D-95568F3BF5E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC1C19CA-A907-4AD1-8C3D-95568F3BF5E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5ECD1F1-86B7-4B1A-8023-301C256771AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5ECD1F1-86B7-4B1A-8023-301C256771AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5ECD1F1-86B7-4B1A-8023-301C256771AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{FD244DAB-F71E-4F53-8821-4584BD5221D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD244DAB-F71E-4F53-8821-4584BD5221D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD244DAB-F71E-4F53-8821-4584BD5221D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14114EE6-413A-418F-B550-67FE7D892C6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14114EE6-413A-418F-B550-67FE7D892C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14114EE6-413A-418F-B550-67FE7D892C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14114EE6-413A-418F-B550-67FE7D892C6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

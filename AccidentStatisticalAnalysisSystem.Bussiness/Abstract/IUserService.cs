@@ -21,5 +21,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
         bool EmailLogin(string Email, string password, out string Messege,out Token token);
         bool PhoneLogin(string Phone, string password, out string Messege,out Token token);
         bool UserNameLogin(string UserName, string password, out string Messege, out Token token);
+        void ChangePassword(string OldPassword,string NewPassword,Guid UserId,out string Messege);
     }
 }

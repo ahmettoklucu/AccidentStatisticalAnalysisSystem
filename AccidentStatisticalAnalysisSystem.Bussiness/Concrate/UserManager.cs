@@ -112,10 +112,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             else
             {
-                mesaj = "Kullanıcı ekleme işlemi başarili";
+
                 ValidationTool.Validate(new UserValidator(), user);
                 user.Password = ComputeSHA256Hash(user.Password);
                 _userDal.UpdateAsyc(user);
+                mesaj = "Kullanıcı ekleme işlemi başarili";
             }
         }
         public  bool EmailLogin(string Email, string password, out string Messege,out Token token)
@@ -184,7 +185,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             var User = _userDal.GetAsyc(p => p.UserName == UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, user1.Result.Password) == false)
+                if (VerifySHA256Hash(password, User.Result.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -194,7 +195,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     Messege = "Giriş başarili.";
                     result = true;
                     User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(user, 25,out Token,out Messege);
+                    TokenProcess.GenerateToken(user, 25,out token,out Messege);
                 }
 
             }
@@ -213,5 +214,30 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             return await _userDal.GetAllAsyc(p => p.EMail.ToLower().Contains(EMail.ToLower()));
         }
 
+        public  void ChangePassword(string OldPassword, string NewPassword, Guid UserId,out string Messege)
+        {
+            Messege = "";
+            var user =   _userDal.GetAsyc(p=>p.Id==UserId);
+            if (user != null)
+            {
+                if (VerifySHA256Hash(OldPassword, user.Result.Password) == false)
+                {
+                    Messege = "Şifre hatalı tekrar deneyiniz.";
+
+                }
+                else
+                {
+                    User User=JsonConvert.DeserializeObject<User>(user.Result.ToString());
+                    ValidationTool.Validate(new UserValidator(), user.Result);
+                    User.Password = ComputeSHA256Hash(User.Password);
+                    _userDal.UpdateAsyc(User);
+                    Messege = "Şifre değiştirme işlemi başarili.";
+                }
+            }
+            else
+            {
+                Messege = "Bir hata Oluştu.";
+            }
+        }
     }
 }
