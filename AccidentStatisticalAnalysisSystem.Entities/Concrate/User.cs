@@ -12,7 +12,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
 {
     public class User : IEntity
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = new Guid();
         public string Name { get; set; }
         public string SureName { get; set; }
         public string UserName { get; set; }
@@ -25,7 +25,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public bool IsDelete { get; set; }
         public bool Status { get; set; }
         public DateTime StarDate { get; set; } = DateTime.Now;
-
+        public Guid SecretKey { get; set; }= new Guid();
         public List<Company> Companies { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+﻿using AccidentStatisticalAnalysisSystem.Bussiness.Security;
+using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
         void AddAsyc(User user, out string Mesaj);
         void UpdateAsyc(User user, out string Mesaj);
         void DeleteAsyc(User user);
-        bool EmailLogin(string Email, string password, out string Messege,out string Token);
-        bool PhoneLogin(string Phone, string password, out string Messege,out string Token);
-        bool UserNameLogin(string UserName, string password, out string Messege, out string Token);
+        bool EmailLogin(string Email, string password, out string Messege,out Token token);
+        bool PhoneLogin(string Phone, string password, out string Messege,out Token token);
+        bool UserNameLogin(string UserName, string password, out string Messege, out Token token);
     }
 }

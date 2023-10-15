@@ -1,10 +1,13 @@
 ﻿using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
+using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.Bussiness.Utilities;
 using AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentValidation;
 using AccidentStatisticalAnalysisSystem.DataAccess.Abstract;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,6 +18,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
     public class UserManager:IUserService
     {
         private IUserDal _userDal;
+        
+
         public UserManager(IUserDal userDal)
         {
             _userDal = userDal;
@@ -71,7 +76,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 user.Password = ComputeSHA256Hash(user.Password);
                 user.RoleId = 2;
                 _userDal.AddAsyc(user);
-                mesaj = "Kullanıcı ekleme işlemi başarili";
+                mesaj = "Kayıt işlemi başarili";
             }
         }
         public void DeleteAsyc(User user)
@@ -113,11 +118,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 _userDal.UpdateAsyc(user);
             }
         }
-        public  bool EmailLogin(string Email, string password, out string Messege,out string Token)
+        public  bool EmailLogin(string Email, string password, out string Messege,out Token token)
         {
             bool result = false;
             Messege = "";
-            Token = "";
+            token = null;
             var User = _userDal.GetAsyc(p => p.EMail == Email);
             if (User != null)
             {
@@ -131,6 +136,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
+                    User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
+                    TokenProcess.GenerateToken(user, 25, out token, out Messege);
 
                 }
 
@@ -141,11 +148,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return  result;
         }
-        public bool PhoneLogin(string Phone, string password, out string Messege,out string Token)
+        public bool PhoneLogin(string Phone, string password, out string Messege,out Token token)
         {
             bool result = false;
             Messege = "";
-            Token = "";
+            token = null;
             var User = _userDal.GetAsyc(p => p.PhoneNumber == Phone);
             if (User != null)
             {
@@ -158,6 +165,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
+                    User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
+                    TokenProcess.GenerateToken(user, 25, out token, out Messege);
                 }
 
             }
@@ -167,15 +176,15 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return  result;
         }
-        public  bool UserNameLogin(string UserName, string password, out string Messege,out string Token)
+        public  bool UserNameLogin(string UserName, string password, out string Messege,out Token token)
         {
             bool result = false;
             Messege = "";
-            Token = "";
+            token = null;
             var User = _userDal.GetAsyc(p => p.UserName == UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                if (VerifySHA256Hash(password, user1.Result.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -184,6 +193,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
+                    User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
+                    TokenProcess.GenerateToken(user, 25,out Token,out Messege);
                 }
 
             }
@@ -197,7 +208,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
         {
             return await _userDal.GetAllAsyc(p => p.PhoneNumber.ToLower().Contains(Phone.ToLower()));
         }
-
         public async Task<List<User>> GetUserByEMailAsyc(string EMail)
         {
             return await _userDal.GetAllAsyc(p => p.EMail.ToLower().Contains(EMail.ToLower()));
