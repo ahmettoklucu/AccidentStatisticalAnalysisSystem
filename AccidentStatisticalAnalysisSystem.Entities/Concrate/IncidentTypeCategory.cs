@@ -13,5 +13,6 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public string Name { get; set; }
         public List<IncidentType> IncidentTypes { get; set; }
         public List<IncidentTypeCategory> ıncidentTypeCategories { get; set; }
+        public List<IncidentTypeIncident> IncidentTypeIncidents { get; set; }
     }
 }

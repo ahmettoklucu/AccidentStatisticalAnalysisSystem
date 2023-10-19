@@ -15,7 +15,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
         Task<List<User>> GetUserByPhoneAsyc(string Phone);
         Task<List<User>> GetUserByEMailAsyc(string EMail);
         Task<User> GetAsyc(Guid UserId);
-        void AddAsyc(User user, out string Mesaj);
+        bool AddAsyc(User user, out string Mesaj);
         void UpdateAsyc(User user, out string Mesaj);
         void DeleteAsyc(User user);
         bool EmailLogin(string Email, string password, out string Messege,out Token token);

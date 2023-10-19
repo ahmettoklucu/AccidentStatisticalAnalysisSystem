@@ -51,31 +51,43 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 return false;
             }
         }
-        public void AddAsyc(User user, out string mesaj)
+        public bool AddAsyc(User user, out string mesaj)
         {
+            bool result = false;
             mesaj = "";
-            var UserName = _userDal.GetAsyc(p => p.UserName == user.UserName);
-            if (UserName != null)
+            try
             {
-                mesaj = "Kullanıcı adi sistemde kayıtlıdır.";
-            }
-            else if (_userDal.GetAsyc(p => p.PhoneNumber == user.PhoneNumber) != null)
-            {
-                mesaj = "Telefon numarası sistemde kayıtlıdır.";
-            }
-            else if (_userDal.GetAsyc(p => p.EMail == user.EMail) != null)
-            {
-                mesaj = "EMail sistemde kayıtlıdır.";
-            }
-            else
-            {
+                var UserName = _userDal.GetAsyc(p => p.UserName == user.UserName);
+                if (UserName.Result != null)
+                {
+                    mesaj = "Kullanıcı adi sistemde kayıtlıdır.";
+                }
+                else if (_userDal.GetAsyc(p => p.PhoneNumber == user.PhoneNumber).Result != null)
+                {
+                    mesaj = "Telefon numarası sistemde kayıtlıdır.";
+                }
+                else if (_userDal.GetAsyc(p => p.EMail == user.EMail).Result != null)
+                {
+                    mesaj = "EMail sistemde kayıtlıdır.";
+                }
+                else
+                {
 
-                ValidationTool.Validate(new UserValidator(), user);
-                user.Password = ComputeSHA256Hash(user.Password);
-                user.RoleId = 2;
-                _userDal.AddAsyc(user);
-                mesaj = "Kayıt işlemi başarili";
+                    ValidationTool.Validate(new UserValidator(), user);
+                    user.Password = ComputeSHA256Hash(user.Password);
+                    _userDal.AddAsyc(user);
+                    mesaj = "Kayıt işlemi başarili";
+                    result = true;
+                }
             }
+            catch (Exception ex)
+            {
+                mesaj=ex.Message;
+                result = false;
+                
+            }
+           
+            return result;
         }
         public void DeleteAsyc(User user)
         {

@@ -16,7 +16,6 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
         {
             Database.SetInitializer<AsascContext>(null);
         }
-        public DbSet<User> Users { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<DangerousMaterialIncident> dangerousMaterialIncidents { get; set; }
@@ -29,7 +28,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
         public DbSet<Role> Roles { get; set; }
         public DbSet<RootIncident> RootIncidents { get; set; }
         public DbSet<Suggestion> Suggestions { get; set; }
-        public DbSet<User> User { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<CompanyType> CompanyTypes { get; set; }
         public DbSet<DangerousMaterial> DangerousMaterials { get; set; }
         public DbSet<EmployerType> EmployerTypes { get; set; }
@@ -45,6 +44,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
         public DbSet<OperatingMode> OperatingModes { get; set; }
         public DbSet<ProcesCategory1> ProcesCategory1s { get; set; }
         public DbSet<ProcesCategory2> ProcesCategory2s { get; set; }
+        public DbSet<ProcesCategory3> ProcesCategory3s { get; set; }
         public DbSet<RootCategory1> RootCategory1s { get; set; }
         public DbSet<RootCategory2> RootCategory2s { get; set; }
         public DbSet<RootCategory3> RootCategory3s { get; set; }

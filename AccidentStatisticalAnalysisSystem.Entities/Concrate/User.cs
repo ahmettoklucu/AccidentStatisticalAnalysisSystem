@@ -19,11 +19,10 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string EMail { get; set; }
-        public int RoleId { get; set; }
+        public int RoleId { get; set; } = 2;
         [ForeignKey("RoleId")]
         public Role Role { get; set; }
-        public bool IsDelete { get; set; }
-        public bool Status { get; set; }
+        public bool IsDelete { get; set; }=false;
         public DateTime StarDate { get; set; } = DateTime.Now;
         public Guid SecretKey { get; set; }= new Guid();
         public List<Company> Companies { get; set; }

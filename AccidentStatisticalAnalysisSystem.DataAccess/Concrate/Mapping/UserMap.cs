@@ -22,8 +22,10 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.EMail).HasColumnName("EMail");
             Property(x => x.RoleId).HasColumnName("RoleId");
             Property(x => x.IsDelete).HasColumnName("IsDelete");
-            Property(x => x.Status).HasColumnName("Status");
             Property(x => x.StarDate).HasColumnName("StarDate");
+            HasRequired(x => x.Role)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.RoleId);
 
 
         }

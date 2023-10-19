@@ -32,10 +32,16 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public DateTime StartDate { get; set; }=DateTime.Now;
         public DateTime Date { get; set; } = DateTime.Now;
         public int OperatingModesId { get; set; }
+        [ForeignKey("OperatingModesId")]
+        public OperatingMode OperatingMode { get; set; }
         public int NotificationId { get; set; }
+        [ForeignKey("OperatingModesId")]
+        public Notification Notification { get; set; }
         public int Hour { get; set; }
         public int Minute { get; set; }
         public int EmployerTypeId { get; set; }
+        [ForeignKey("EmployerTypeId")]
+        public EmployerType EmployerType { get; set; }
         public int Status { get; set; }
         public string Image { get; set; }
         public List<FinanceIncident> FinanceIncidents { get; set; }
@@ -45,5 +51,6 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public List<ProcesIncident> ProcesIncident { get; set; }
         public List<DangerousMaterialIncident> DangerousMaterialIncidents { get; set; }
         public List<RootIncident> RootIncident { get; set; }
+        public List<IncidentTypeIncident> IncidentTypeIncidents { get; set; }
     }
 }

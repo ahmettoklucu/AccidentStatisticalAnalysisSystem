@@ -14,6 +14,8 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
         {
             ToTable(@"RootIncidents", "dbo");
             HasKey(x => x.IncidentId);
+            HasKey(x => x.RootId);
+            Property(x=>x.Value).HasColumnName("Value");
         }
     }
 }

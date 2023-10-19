@@ -13,10 +13,11 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
     {
         public RootCategory1Map()
         {
-            ToTable(@"ProcesCategory3", "dbo");
+            ToTable(@"RootCategory1", "dbo");
             HasKey(x => x.Id);
             Property(x => x.Id).HasColumnName("Id");
             Property(x => x.Name).HasColumnName("Name");
+
 
         }
     }
