@@ -18,8 +18,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
     public class UserManager:IUserService
     {
         private IUserDal _userDal;
-        
-
         public UserManager(IUserDal userDal)
         {
             _userDal = userDal;
@@ -213,7 +211,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
         {
             return await _userDal.GetAllAsyc(p => p.EMail.ToLower().Contains(EMail.ToLower()));
         }
-
         public  void ChangePassword(string OldPassword, string NewPassword, Guid UserId,out string Messege)
         {
             Messege = "";

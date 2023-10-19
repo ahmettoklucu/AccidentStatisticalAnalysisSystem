@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccidentStatisticalAnalysis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccidentStatisticalAnalysisSystem.DataAccess", "AccidentStatisticalAnalysisSystem.DataAccess\AccidentStatisticalAnalysisSystem.DataAccess.csproj", "{FD244DAB-F71E-4F53-8821-4584BD5221D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentStatisticalAnalysisSystem.WepApi", "AccidentStatisticalAnalysisSystem.WWepApi\AccidentStatisticalAnalysisSystem.WepApi.csproj", "{14114EE6-413A-418F-B550-67FE7D892C6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccidentStatisticalAnalysisSystem.WepApi", "AccidentStatisticalAnalysisSystem.WepApi1\AccidentStatisticalAnalysisSystem.WepApi.csproj", "{E4987345-99B3-47A3-840A-4BDA41F0DBC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{FD244DAB-F71E-4F53-8821-4584BD5221D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD244DAB-F71E-4F53-8821-4584BD5221D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD244DAB-F71E-4F53-8821-4584BD5221D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{14114EE6-413A-418F-B550-67FE7D892C6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{14114EE6-413A-418F-B550-67FE7D892C6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{14114EE6-413A-418F-B550-67FE7D892C6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{14114EE6-413A-418F-B550-67FE7D892C6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4987345-99B3-47A3-840A-4BDA41F0DBC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4987345-99B3-47A3-840A-4BDA41F0DBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4987345-99B3-47A3-840A-4BDA41F0DBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4987345-99B3-47A3-840A-4BDA41F0DBC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
