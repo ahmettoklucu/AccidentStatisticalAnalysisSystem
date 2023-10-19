@@ -25,6 +25,18 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.
             Property(x=>x.UserId).HasColumnName("UserId");
             Property(x=>x.Image).HasColumnName("Image");
             Property(x=>x.Status).HasColumnName("Status");
+            HasRequired(x => x.User)
+                .WithMany(x => x.Companies)
+                .HasForeignKey(x => x.UserId);
+            HasRequired(x => x.CompanyType)
+                .WithMany(x => x.Companies)
+                .HasForeignKey(x => x.CompanyTypeId);
+            HasRequired(x => x.Nace)
+               .WithMany(x => x.Companies)
+               .HasForeignKey(x => x.NaceId);
+            HasRequired(x => x.City)
+               .WithMany(x => x.Companies)
+               .HasForeignKey(x => x.CityId);
 
         }
     }

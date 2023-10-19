@@ -13,11 +13,14 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
     {
         public void Configure(EntityTypeBuilder<EnvironmentalDamage> builder)
         {
-            ToTable(@"DangerousMaterials", "dbo");
+            ToTable(@"EnvironmentalDamageS", "dbo");
             HasKey(x => x.Id);
             Property(x => x.Id).HasColumnName("Id");
             Property(x => x.Name).HasColumnName("Name");
             Property(x => x.EnvironmentalDamageCategoryId).HasColumnName("EnvironmentalDamageCategoryId");
+            HasRequired(x => x.EnvironmentalDamageCategory)
+                .WithMany(x => x.EnvironmentalDamage)
+                .HasForeignKey(x => x.EnvironmentalDamageCategoryId);
         }
     }
 }

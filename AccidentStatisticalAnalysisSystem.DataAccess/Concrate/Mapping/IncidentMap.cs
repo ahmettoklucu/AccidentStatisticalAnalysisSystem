@@ -43,6 +43,13 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             HasRequired(x => x.EmployerType)
                 .WithMany(x => x.Incidents)
                 .HasForeignKey(x => x.EmployerTypeId);
+            HasRequired(x => x.Company)
+                .WithMany(x => x.Incidents)
+                .HasForeignKey(x => x.CompanyId);
+            HasRequired(x => x.City)
+                .WithMany(x => x.Incidents)
+                .HasForeignKey(x => x.CityId);
+
 
         }
     }

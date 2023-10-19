@@ -19,6 +19,14 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.FinaceId).HasColumnName("FinaceId");
             Property(x=>x.Value).HasColumnName("Value");
 
+
+            HasRequired(x => x.Incident)
+               .WithMany(x => x.FinanceIncidents)
+               .HasForeignKey(x => x.IncidentId);
+            HasRequired(x => x.Finance)
+                .WithMany(x => x.FinanceIncidents)
+                .HasForeignKey(x => x.FinaceId);
+
         }
     }
 }

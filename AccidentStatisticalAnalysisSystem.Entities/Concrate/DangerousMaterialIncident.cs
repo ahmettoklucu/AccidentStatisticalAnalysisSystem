@@ -15,6 +15,8 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         [ForeignKey("IncidentId")]
         public Incident Incident { get; set; }
         public int DangerousMaterialId { get; set; }
+        [ForeignKey("DangerousMaterialId")]
+        public DangerousMaterial DangerousMaterial { get; set; }
         public bool Value { get; set; }
 
     }

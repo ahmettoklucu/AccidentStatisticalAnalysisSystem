@@ -15,6 +15,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         [ForeignKey("IncidentId")]
         public Incident Incident { get; set; }
         public int RootId { get; set; }
+        [ForeignKey("RootId")]
         public Root Root { get; set; }
         public bool Value { get; set; }
     }

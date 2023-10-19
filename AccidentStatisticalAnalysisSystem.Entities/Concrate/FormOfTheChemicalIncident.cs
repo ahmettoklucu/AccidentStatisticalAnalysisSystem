@@ -15,6 +15,8 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         [ForeignKey("IncidentId")]
         public Incident Incident { get; set; }
         public int FormOfTheChemicalId { get; set; }
+        [ForeignKey("FormOfTheChemicalId")]
+        public FormOfTheChemical FormOfTheChemical { get; set; }
         public bool Value { get; set; }
 
     }

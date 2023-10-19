@@ -20,7 +20,11 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         [ForeignKey("CityId")]
         public City City { get; set; }
         public int NaceId { get; set; }
+        [ForeignKey("NaceId")]
+        public Nace Nace { get; set; }
         public int CompanyTypeId { get; set; }
+        [ForeignKey("CompanyTypeId")]
+        public CompanyType CompanyType { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; } = DateTime.Now;
         public int NumberOfWorkers { get; set; }
