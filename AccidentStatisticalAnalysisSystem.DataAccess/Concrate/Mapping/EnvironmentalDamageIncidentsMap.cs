@@ -13,8 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
         public EnvironmentalDamageIncidentsMap()
         {
             ToTable(@"EnvironmentalDamageIncidents","dbo");
-            HasKey(x => x.IncidentId);
-            HasKey(x => x.EnvironmentalDamageId);
+            HasKey(x => new { x.IncidentId, x.EnvironmentalDamageId });
             Property(x => x.IncidentId).HasColumnName("IncidentId");
             Property(x => x.EnvironmentalDamageId).HasColumnName("EnvironmentalDamageId");
             Property(x=>x.Value).HasColumnName("Value");

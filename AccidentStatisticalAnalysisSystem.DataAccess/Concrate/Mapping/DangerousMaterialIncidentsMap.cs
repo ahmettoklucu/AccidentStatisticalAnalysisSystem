@@ -13,8 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
         public DangerousMaterialIncidentsMap()
         {
             ToTable(@"DangerousMaterialIncidents", "dbo");
-            HasKey(x=>x.IncidentId);
-            HasKey(x => x.DangerousMaterialId);
+            HasKey(x => new { x.IncidentId, x.DangerousMaterialId });
             Property(x=>x.IncidentId).HasColumnName("IncidentId");
             Property(x => x.DangerousMaterialId).HasColumnName("DangerousMaterialId");
             Property(x=>x.Value).HasColumnName("Value");
@@ -22,6 +21,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             HasRequired(x => x.Incident)
                 .WithMany(x => x.DangerousMaterialIncidents)
                 .HasForeignKey(x => x.IncidentId);
+
             HasRequired(x => x.DangerousMaterial)
                 .WithMany(x => x.DangerousMaterialIncidents)
                 .HasForeignKey(x => x.DangerousMaterialId);

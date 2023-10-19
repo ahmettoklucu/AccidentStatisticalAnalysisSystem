@@ -13,8 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
         public ProcesIncidentMap()
         {
             ToTable(@"ProcesIncidents", "dbo");
-            HasKey(x => x.IncidentId);
-            HasKey(x => x.ProcesId);
+            HasKey(x => new { x.IncidentId, x.ProcesId});
             Property(x => x.IncidentId).HasColumnName("IncidentId");
             Property(x => x.ProcesId).HasColumnName("ProcesId");
             Property(x => x.Value).HasColumnName("Value");

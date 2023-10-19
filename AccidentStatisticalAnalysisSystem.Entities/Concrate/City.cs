@@ -12,7 +12,5 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
     {
         public int Id { get; set; }
         public string CityName { get; set; }
-        public List<Company> Companies { get; set; }
-        public List<Incident> Incidents { get; set; }
     }
 }

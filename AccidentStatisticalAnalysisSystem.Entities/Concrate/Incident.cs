@@ -24,8 +24,6 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public int Evacuation { get; set; }
         public bool IsDelete { get; set; }
         public int CityId { get; set; }
-        [ForeignKey("CityId")]
-        public City City { get; set; }
         public bool EnvironmentalDamage { get; set; }
         public double PropertyDamagerty { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -35,7 +33,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         [ForeignKey("OperatingModesId")]
         public OperatingMode OperatingMode { get; set; }
         public int NotificationId { get; set; }
-        [ForeignKey("OperatingModesId")]
+        [ForeignKey("NotificationId")]
         public Notification Notification { get; set; }
         public int Hour { get; set; }
         public int Minute { get; set; }

@@ -17,8 +17,6 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public Guid Id { get; set; } = new Guid();
         public string CompanyName { get; set; }
         public int CityId { get; set; }
-        [ForeignKey("CityId")]
-        public City City { get; set; }
         public int NaceId { get; set; }
         [ForeignKey("NaceId")]
         public Nace Nace { get; set; }

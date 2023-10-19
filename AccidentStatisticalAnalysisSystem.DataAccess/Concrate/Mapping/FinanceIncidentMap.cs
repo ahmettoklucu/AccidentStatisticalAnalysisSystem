@@ -13,8 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
         public FinanceIncidentMap()
         {
             ToTable(@"FinanceIncidents","dbo");
-            HasKey(x=> x.IncidentId);
-            HasKey(x => x.FinaceId);
+            HasKey(x => new { x.IncidentId, x.FinaceId });
             Property(x => x.IncidentId).HasColumnName("IncidentId");
             Property(x => x.FinaceId).HasColumnName("FinaceId");
             Property(x=>x.Value).HasColumnName("Value");

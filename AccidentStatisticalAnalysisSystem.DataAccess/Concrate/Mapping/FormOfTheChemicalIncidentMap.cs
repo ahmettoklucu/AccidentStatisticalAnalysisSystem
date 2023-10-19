@@ -13,8 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
         public FormOfTheChemicalIncidentMap()
         {
             ToTable(@"FormOfTheChemicalIncidents", "dbo");
-            HasKey(x => x.IncidentId);
-            HasKey(x => x.FormOfTheChemicalId);
+            HasKey(x => new { x.IncidentId, x.FormOfTheChemicalId });
             Property(x => x.IncidentId).HasColumnName("IncidentId");
             Property(x => x.FormOfTheChemicalId).HasColumnName("FormOfTheChemicalId");
             Property(x => x.Value).HasColumnName("Value");

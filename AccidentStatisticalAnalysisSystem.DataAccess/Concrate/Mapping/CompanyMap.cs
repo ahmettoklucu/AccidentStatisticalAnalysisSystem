@@ -34,10 +34,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.
             HasRequired(x => x.Nace)
                .WithMany(x => x.Companies)
                .HasForeignKey(x => x.NaceId);
-            HasRequired(x => x.City)
-               .WithMany(x => x.Companies)
-               .HasForeignKey(x => x.CityId);
-
+             
         }
     }
 }

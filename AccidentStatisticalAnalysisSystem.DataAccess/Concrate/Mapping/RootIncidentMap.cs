@@ -13,8 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
         public RootIncidentMap()
         {
             ToTable(@"RootIncidents", "dbo");
-            HasKey(x => x.IncidentId);
-            HasKey(x => x.RootId);
+            HasKey(x => new { x.IncidentId, x.RootId });
             Property(x=>x.Value).HasColumnName("Value");
             HasRequired(x => x.Incident)
              .WithMany(x => x.RootIncident)
