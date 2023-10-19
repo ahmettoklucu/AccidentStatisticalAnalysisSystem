@@ -18,6 +18,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.Id).HasColumnName("Id");
             Property(x => x.Name).HasColumnName("Name");
             Property(x => x.IncidentTypeCategoryId).HasColumnName("IncidentTypeCategoryId");
+
             HasRequired(x => x.IncidentTypeCategory)
               .WithMany(x => x.IncidentTypes)
               .HasForeignKey(x => x.IncidentTypeCategoryId);
