@@ -20,7 +20,8 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.RootCategory1Id).HasColumnName("RootCategory1Id");
             HasRequired(x => x.RootCategory1)
               .WithMany(x => x.RootCategory2)
-              .HasForeignKey(x => x.RootCategory1Id);
+              .HasForeignKey(x => x.RootCategory1Id)
+              .WillCascadeOnDelete(false);
 
         }
     }

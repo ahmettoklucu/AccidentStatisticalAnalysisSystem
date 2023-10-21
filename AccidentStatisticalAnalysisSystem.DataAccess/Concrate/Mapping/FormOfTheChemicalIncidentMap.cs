@@ -20,10 +20,12 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 
             HasRequired(x => x.Incident)
                .WithMany(x => x.FormOfTheChemicalIncidents)
-               .HasForeignKey(x => x.IncidentId);
+               .HasForeignKey(x => x.IncidentId)
+               .WillCascadeOnDelete(false);
             HasRequired(x => x.FormOfTheChemical)
                 .WithMany(x => x.FormOfTheChemicalIncidents)
-                .HasForeignKey(x => x.FormOfTheChemicalId);
+                .HasForeignKey(x => x.FormOfTheChemicalId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

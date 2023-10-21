@@ -25,7 +25,8 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.StarDate).HasColumnName("StarDate");
             HasRequired(x => x.Role)
                 .WithMany(x => x.Users)
-                .HasForeignKey(x => x.RoleId);
+                .HasForeignKey(x => x.RoleId)
+                .WillCascadeOnDelete(false);
 
 
         }

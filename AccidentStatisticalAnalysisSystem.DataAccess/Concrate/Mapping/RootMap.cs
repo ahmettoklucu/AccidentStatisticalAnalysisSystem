@@ -21,13 +21,16 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.RootCategory3Id).HasColumnName("RootCategory3Id");
             HasRequired(x => x.RootCategory1)
                .WithMany(x => x.Root)
-               .HasForeignKey(x => x.RootCategory1Id);
+               .HasForeignKey(x => x.RootCategory1Id)
+               .WillCascadeOnDelete(false);
             HasRequired(x => x.RootCategory2)
                .WithMany(x => x.Root)
-               .HasForeignKey(x => x.RootCategory2Id);
+               .HasForeignKey(x => x.RootCategory2Id)
+               .WillCascadeOnDelete(false);
             HasRequired(x => x.RootCategory3)
               .WithMany(x => x.Root)
-              .HasForeignKey(x => x.RootCategory3Id);
+              .HasForeignKey(x => x.RootCategory3Id)
+              .WillCascadeOnDelete(false);
 
         }
     }

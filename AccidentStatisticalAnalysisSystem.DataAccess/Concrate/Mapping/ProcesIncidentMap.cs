@@ -19,10 +19,12 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.Value).HasColumnName("Value");
             HasRequired(x => x.Incident)
              .WithMany(x => x.ProcesIncident)
-             .HasForeignKey(x => x.IncidentId);
+             .HasForeignKey(x => x.IncidentId)
+             .WillCascadeOnDelete(false);
             HasRequired(x => x.Proces)
                .WithMany(x => x.ProcesIncident)
-               .HasForeignKey(x => x.ProcesId);
+               .HasForeignKey(x => x.ProcesId)
+               .WillCascadeOnDelete(false);
         }
     }
 }

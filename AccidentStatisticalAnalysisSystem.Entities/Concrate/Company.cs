@@ -18,10 +18,10 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public string CompanyName { get; set; }
         public int CityId { get; set; }
         public int NaceId { get; set; }
-        [ForeignKey("NaceId")]
+
         public Nace Nace { get; set; }
         public int CompanyTypeId { get; set; }
-        [ForeignKey("CompanyTypeId")]
+
         public CompanyType CompanyType { get; set; }
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; } = DateTime.Now;
@@ -29,7 +29,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public List<Incident> Incidents { get; set; }
         public bool IsDelete { get; set; }
         public Guid UserId { get; set; }
-        [ForeignKey("UserId")]
+
         public User User { get; set; }
         public string Image { get; set; }
         public bool Status { get; set; }

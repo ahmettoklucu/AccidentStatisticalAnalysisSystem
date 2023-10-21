@@ -20,7 +20,8 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
             Property(x => x.EnvironmentalDamageCategoryId).HasColumnName("EnvironmentalDamageCategoryId");
             HasRequired(x => x.EnvironmentalDamageCategory)
                 .WithMany(x => x.EnvironmentalDamage)
-                .HasForeignKey(x => x.EnvironmentalDamageCategoryId);
+                .HasForeignKey(x => x.EnvironmentalDamageCategoryId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

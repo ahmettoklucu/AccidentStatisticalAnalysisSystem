@@ -27,13 +27,16 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.
             Property(x=>x.Status).HasColumnName("Status");
             HasRequired(x => x.User)
                 .WithMany(x => x.Companies)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.UserId)
+                .WillCascadeOnDelete(false);
             HasRequired(x => x.CompanyType)
                 .WithMany(x => x.Companies)
-                .HasForeignKey(x => x.CompanyTypeId);
+                .HasForeignKey(x => x.CompanyTypeId)
+                .WillCascadeOnDelete(false);
             HasRequired(x => x.Nace)
                .WithMany(x => x.Companies)
-               .HasForeignKey(x => x.NaceId);
+               .HasForeignKey(x => x.NaceId)
+               .WillCascadeOnDelete(false);
              
         }
     }

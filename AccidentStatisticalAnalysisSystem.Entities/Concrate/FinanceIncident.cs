@@ -13,10 +13,10 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
     {
 
         public Guid IncidentId { get; set; }
-        [ForeignKey("IncidentId")]
+
         public Incident Incident { get; set; }
         public int FinaceId { get; set; }
-        [ForeignKey("FinaceId")]
+
         public Finance Finance { get; set; }
         public double Value { get; set; }
 

@@ -36,17 +36,21 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 
             HasRequired(x => x.Notification)
                 .WithMany(x => x.Incidents)
-                .HasForeignKey(x => x.NotificationId);
+                .HasForeignKey(x => x.NotificationId)
+                .WillCascadeOnDelete(false);
 
             HasRequired(x => x.OperatingMode)
                 .WithMany(x => x.Incidents)
-                .HasForeignKey(x => x.OperatingModesId);
+                .HasForeignKey(x => x.OperatingModesId)
+                .WillCascadeOnDelete(false);
             HasRequired(x => x.EmployerType)
                 .WithMany(x => x.Incidents)
-                .HasForeignKey(x => x.EmployerTypeId);
+                .HasForeignKey(x => x.EmployerTypeId)
+                .WillCascadeOnDelete(false);
             HasRequired(x => x.Company)
                 .WithMany(x => x.Incidents)
-                .HasForeignKey(x => x.CompanyId);
+                .HasForeignKey(x => x.CompanyId)
+                .WillCascadeOnDelete(false);
 
         }
     }

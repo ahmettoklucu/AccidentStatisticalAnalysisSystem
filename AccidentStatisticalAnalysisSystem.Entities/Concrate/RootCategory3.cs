@@ -13,7 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public int Id { get; set; }
         public string Name { get; set; }
         public int RootCategory2Id { get; set; }
-        [ForeignKey("RootCategory2Id")]
+
         public RootCategory2 RootCategory2 { get; set; }
         public List<Root> Root { get; set; }
         public List<RootIncident> RootIncident { get; set; }
