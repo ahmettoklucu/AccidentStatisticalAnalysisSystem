@@ -105,8 +105,9 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
         {
             return await _userDal.GetAllAsyc(p => p.UserName.ToLower().Contains(userName.ToLower()));
         }
-        public void UpdateAsyc(User user, out string mesaj)
+        public bool UpdateAsyc(User user, out string mesaj)
         {
+            bool result= false;
             mesaj = "";
             if (_userDal.GetAsyc(p => p.UserName == user.UserName && p.Id != user.Id) != null)
             {
@@ -127,17 +128,20 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 user.Password = ComputeSHA256Hash(user.Password);
                 _userDal.UpdateAsyc(user);
                 mesaj = "Kullanıcı ekleme işlemi başarili";
+                result = true;
             }
+            return result;
         }
-        public  bool EmailLogin(string Email, string password, out string Messege,out Token token)
+        public   bool EmailLogin(string Email, string password, out string Messege,out Token token)
         {
             bool result = false;
             Messege = "";
             token = null;
-            var User = _userDal.GetAsyc(p => p.EMail == Email);
+            //var User =  _userDal.GetAsyc(p => p.EMail == Email);
+            var User = _userDal.Get(p => p.EMail == Email);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                if (VerifySHA256Hash(password,User.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -146,9 +150,9 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 else
                 {
                     Messege = "Giriş başarili.";
+                    //User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
+                    TokenProcess.GenerateToken(User, 25, out token, out Messege);
                     result = true;
-                    User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(user, 25, out token, out Messege);
 
                 }
 
@@ -164,10 +168,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             bool result = false;
             Messege = "";
             token = null;
-            var User = _userDal.GetAsyc(p => p.PhoneNumber == Phone);
+            //var User = _userDal.GetAsyc(p => p.PhoneNumber == Phone);
+            var User = _userDal.Get(p => p.PhoneNumber == Phone);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                if (VerifySHA256Hash(password, User.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -176,8 +181,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
-                    User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(user, 25, out token, out Messege);
+                    //User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
+                    TokenProcess.GenerateToken(User, 25, out token, out Messege);
                 }
 
             }
@@ -192,10 +197,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             bool result = false;
             Messege = "";
             token = null;
-            var User = _userDal.GetAsyc(p => p.UserName == UserName);
+            var User = _userDal.Get(p => p.UserName == UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                if (VerifySHA256Hash(password, User.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -204,8 +209,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
-                    User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(user, 25,out token,out Messege);
+                    //User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
+                    TokenProcess.GenerateToken(User, 25,out token,out Messege);
                 }
 
             }

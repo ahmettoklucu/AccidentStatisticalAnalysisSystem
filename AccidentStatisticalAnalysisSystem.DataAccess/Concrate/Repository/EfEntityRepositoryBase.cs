@@ -24,6 +24,13 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
                 return await context.Set<TEntity>().SingleOrDefaultAsync(filter);
             }
         }
+        public TEntity Get(Expression<Func<TEntity, bool>> filter)
+        {
+            using (TContext context = new TContext())
+            {
+                return  context.Set<TEntity>().SingleOrDefault(filter);
+            }
+        }
         public async Task<List<TEntity>> GetAllAsyc(Expression<Func<TEntity, bool>> filter = null)
         {
             using (TContext context = new TContext())
@@ -31,6 +38,15 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
                 return filter == null
                     ? await context.Set<TEntity>().AsNoTracking().ToListAsync()
                     : await context.Set<TEntity>().Where(filter).AsNoTracking().ToListAsync();
+            }
+        }
+        public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
+        {
+            using (TContext context = new TContext())
+            {
+                return filter == null
+                    ?  context.Set<TEntity>().ToList()
+                    :  context.Set<TEntity>().Where(filter).ToList();
             }
         }
 
