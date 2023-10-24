@@ -16,7 +16,6 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public Guid Id { get; set; } = new Guid();
         public string Name { get; set; }
         public Guid CompanyId { get; set; }
-
         public  Company Company { get; set; }
         public string IncidentDescription { get; set; }
         public int Deaths { get; set; }
@@ -30,10 +29,8 @@ namespace AccidentStatisticalAnalysisSystem.Entities.Concrate
         public DateTime StartDate { get; set; }=DateTime.Now;
         public DateTime Date { get; set; } = DateTime.Now;
         public int OperatingModesId { get; set; }
-
         public OperatingMode OperatingMode { get; set; }
         public int NotificationId { get; set; }
-
         public Notification Notification { get; set; }
         public int Hour { get; set; }
         public int Minute { get; set; }

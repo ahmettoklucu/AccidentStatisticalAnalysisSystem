@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Jose;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
 
 namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
 {
@@ -46,7 +47,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
             }
             return result;
         }
-        public static void  GenerateToken(User user, int ExpireMinute, out Token token,out string Error)
+        public static void  GenerateToken(UserResponseModele user, int ExpireMinute, out Token token,out string Error)
         {
 
             token = null;

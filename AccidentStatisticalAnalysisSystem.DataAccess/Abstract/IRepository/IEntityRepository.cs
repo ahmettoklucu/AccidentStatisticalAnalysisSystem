@@ -11,9 +11,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Abstract.IRepository
     public interface IEntityRepository<T> where T : class, IEntity, new()
     {
         Task<List<T>> GetAllAsyc(Expression<Func<T, bool>> filter = null);
-        List<T> GetAll(Expression<Func<T, bool>> filter = null);
         Task<T> GetAsyc(Expression<Func<T, bool>> filter);
-        T Get(Expression<Func<T, bool>> filter);
         Task<T> AddAsyc(T entity);
         Task<T> UpdateAsyc(T entity);
         void DeleteAsyc(T entity);

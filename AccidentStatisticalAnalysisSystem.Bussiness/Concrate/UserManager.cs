@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.Bussiness.Utilities;
 using AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentValidation;
@@ -137,11 +138,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             bool result = false;
             Messege = "";
             token = null;
-            //var User =  _userDal.GetAsyc(p => p.EMail == Email);
-            var User = _userDal.Get(p => p.EMail == Email);
+            var User = _userDal.GetAsyc(p => p.EMail == Email);
             if (User != null)
             {
-                if (VerifySHA256Hash(password,User.Password) == false)
+                if (VerifySHA256Hash(password,User.Result.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -150,8 +150,19 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 else
                 {
                     Messege = "Giriş başarili.";
-                    //User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(User, 25, out token, out Messege);
+                    UserResponseModele userResponseModele = new UserResponseModele();
+                    userResponseModele.Name=User.Result.Name;
+                    userResponseModele.SureName=User.Result.SureName;
+                    userResponseModele.PhoneNumber=User.Result.PhoneNumber;
+                    userResponseModele.EMail=User.Result.EMail;
+                    userResponseModele.Id=User.Result.Id;
+                    userResponseModele.IsDelete = User.Result.IsDelete;
+                    userResponseModele.StarDate=User.Result.StarDate;
+                    userResponseModele.SecretKey=User.Result.SecretKey;
+                    userResponseModele.UserName=User.Result.UserName;
+                    userResponseModele.Password = User.Result.Password;
+                    userResponseModele.RoleId=User.Result.RoleId;
+                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
                     result = true;
 
                 }
@@ -168,11 +179,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             bool result = false;
             Messege = "";
             token = null;
-            //var User = _userDal.GetAsyc(p => p.PhoneNumber == Phone);
-            var User = _userDal.Get(p => p.PhoneNumber == Phone);
+            var User = _userDal.GetAsyc(p => p.PhoneNumber == Phone);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Password) == false)
+                if (VerifySHA256Hash(password, User.Result.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -181,8 +191,20 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
-                    //User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(User, 25, out token, out Messege);
+
+                    UserResponseModele userResponseModele = new UserResponseModele();
+                    userResponseModele.Name = User.Result.Name;
+                    userResponseModele.SureName = User.Result.SureName;
+                    userResponseModele.PhoneNumber = User.Result.PhoneNumber;
+                    userResponseModele.EMail = User.Result.EMail;
+                    userResponseModele.Id = User.Result.Id;
+                    userResponseModele.IsDelete = User.Result.IsDelete;
+                    userResponseModele.StarDate = User.Result.StarDate;
+                    userResponseModele.SecretKey = User.Result.SecretKey;
+                    userResponseModele.UserName = User.Result.UserName;
+                    userResponseModele.Password = User.Result.Password;
+                    userResponseModele.RoleId = User.Result.RoleId;
+                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
                 }
 
             }
@@ -197,10 +219,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             bool result = false;
             Messege = "";
             token = null;
-            var User = _userDal.Get(p => p.UserName == UserName);
+            var User = _userDal.GetAsyc(p => p.UserName == UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Password) == false)
+                if (VerifySHA256Hash(password, User.Result.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
@@ -209,8 +231,19 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     Messege = "Giriş başarili.";
                     result = true;
-                    //User user = JsonConvert.DeserializeObject<User>(User.Result.ToString());
-                    TokenProcess.GenerateToken(User, 25,out token,out Messege);
+                    UserResponseModele userResponseModele = new UserResponseModele();
+                    userResponseModele.Name = User.Result.Name;
+                    userResponseModele.SureName = User.Result.SureName;
+                    userResponseModele.PhoneNumber = User.Result.PhoneNumber;
+                    userResponseModele.EMail = User.Result.EMail;
+                    userResponseModele.Id = User.Result.Id;
+                    userResponseModele.IsDelete = User.Result.IsDelete;
+                    userResponseModele.StarDate = User.Result.StarDate;
+                    userResponseModele.SecretKey = User.Result.SecretKey;
+                    userResponseModele.UserName = User.Result.UserName;
+                    userResponseModele.Password = User.Result.Password;
+                    userResponseModele.RoleId = User.Result.RoleId;
+                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
                 }
 
             }
