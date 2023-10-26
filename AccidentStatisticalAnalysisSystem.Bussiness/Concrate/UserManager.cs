@@ -18,7 +18,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
 {
     public class UserManager:IUserService
     {
-        private IUserDal _userDal;
+        private readonly IUserDal _userDal;
         public UserManager(IUserDal userDal)
         {
             _userDal = userDal;
@@ -285,6 +285,45 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             {
                 Messege = "Bir hata Oluştu.";
             }
+        }
+        public bool Login(string Email, string password, out string Messege, out Token token)
+        {
+            bool result = false;
+            Messege = "";
+            token = null;
+            var User = _userDal.GetAsyc(p => p.UserName == Email || p.EMail == Email || p.PhoneNumber ==Email);
+            if (User != null)
+            {
+                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                {
+                    Messege = "Şifre hatalı tekrar deneyiniz.";
+                    User = null;
+                }
+                else
+                {
+                    Messege = "Giriş başarili.";
+                    result = true;
+                    UserResponseModele userResponseModele = new UserResponseModele();
+                    userResponseModele.Name = User.Result.Name;
+                    userResponseModele.SureName = User.Result.SureName;
+                    userResponseModele.PhoneNumber = User.Result.PhoneNumber;
+                    userResponseModele.EMail = User.Result.EMail;
+                    userResponseModele.Id = User.Result.Id;
+                    userResponseModele.IsDelete = User.Result.IsDelete;
+                    userResponseModele.StarDate = User.Result.StarDate;
+                    userResponseModele.SecretKey = User.Result.SecretKey;
+                    userResponseModele.UserName = User.Result.UserName;
+                    userResponseModele.Password = User.Result.Password;
+                    userResponseModele.RoleId = User.Result.RoleId;
+                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
+                }
+
+            }
+            else
+            {
+                Messege = "Bu Kullanıcı sistemde bulunmamaktadir.";
+            }
+            return result;
         }
     }
 }

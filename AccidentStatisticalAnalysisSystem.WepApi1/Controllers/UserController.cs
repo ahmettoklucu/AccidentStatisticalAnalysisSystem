@@ -1,5 +1,6 @@
 ﻿    using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
@@ -13,21 +14,21 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
         public UserController()
         {
             _userService = new UserManager(new EfUserDal());
         }
         [HttpPost]
-        public async Task<IActionResult> Register(string Name,string SureName,string UserName,string Password,string PhoneNumber,string EMail)
+        public async Task<IActionResult> Register(UserResponseModele userResponseModele)
         {
             User user=new User();
-            user.Name = Name;
-            user.SureName = SureName;
-            user.Password = Password;
-            user.PhoneNumber = PhoneNumber;
-            user.EMail = EMail; 
-            user.UserName = UserName;
+            user.Name = userResponseModele.Name;
+            user.SureName = userResponseModele.SureName;
+            user.Password = userResponseModele.Password;
+            user.PhoneNumber = userResponseModele.PhoneNumber;
+            user.EMail = userResponseModele.EMail; 
+            user.UserName = userResponseModele.UserName;
             bool addedProduct =  _userService.AddAsyc(user,out string message);
             if (addedProduct==true)
             {
@@ -41,12 +42,12 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
 
 
         }
-        [HttpGet]
-        public async Task<IActionResult> EMailLogin(string Email,string password)
+        [HttpPost]
+        public async Task<IActionResult> Login(string UserName, string password)
         {
             string message;
             Token token;
-            bool resul= _userService.EmailLogin(Email, password, out message, out token);
+            bool resul= _userService.Login(UserName, password, out message, out token);
             if (resul==true)
             {
                 return Ok(token.JWT);

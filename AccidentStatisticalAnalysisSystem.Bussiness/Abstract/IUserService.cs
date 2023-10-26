@@ -18,6 +18,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
         bool AddAsyc(User user, out string Mesaj);
         bool UpdateAsyc(User user, out string Mesaj);
         void DeleteAsyc(User user);
+        bool Login(string Email, string password, out string Messege, out Token token);
         bool EmailLogin(string Email, string password, out string Messege,out Token token);
         bool PhoneLogin(string Phone, string password, out string Messege,out Token token);
         bool UserNameLogin(string UserName, string password, out string Messege, out Token token);
