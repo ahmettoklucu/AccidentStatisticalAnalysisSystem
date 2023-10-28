@@ -1,5 +1,6 @@
 ﻿    using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.RequestModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
@@ -43,12 +44,12 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Login(string UserName, string password)
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             string message;
             Token token;
-            bool resul= _userService.Login(UserName, password, out message, out token);
-            if (resul==true)
+            bool result= _userService.Login(loginRequest, out message, out token);
+            if (result==true)
             {
                 return Ok(token.JWT);
             }

@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.RequestModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.Bussiness.Utilities;
@@ -286,15 +287,15 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 Messege = "Bir hata Oluştu.";
             }
         }
-        public bool Login(string Email, string password, out string Messege, out Token token)
+        public bool Login(LoginRequest loginRequest, out string Messege, out Token token)
         {
             bool result = false;
             Messege = "";
             token = null;
-            var User = _userDal.GetAsyc(p => p.UserName == Email || p.EMail == Email || p.PhoneNumber ==Email);
+            var User = _userDal.GetAsyc(p => p.UserName == loginRequest.UserName || p.EMail == loginRequest.UserName || p.PhoneNumber == loginRequest.UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                if (VerifySHA256Hash(loginRequest.Password, User.Result.Password) == false)
                 {
                     Messege = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
