@@ -1,4 +1,4 @@
-﻿    using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
+﻿using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.RequestModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;

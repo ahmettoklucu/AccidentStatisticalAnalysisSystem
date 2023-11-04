@@ -20,9 +20,17 @@ namespace AccidentStatisticalAnalysisSystem.WepApi
         {
             // Gerekli servislerin ve bağımlılıkların eklenmesi burada yapılır.
             services.AddControllers(); // Web API kontrolcülerini etkinleştirir.
-            services.AddSwaggerGen(); // Swagger belgeleri eklemek için
-            // services.AddAuthentication(); // Kimlik doğrulama eklemek için
+            services.AddSwaggerGen(); // Swagger belgeleri eklemek için                     
+            // services.AddAuthentication(); // Kimlik doğrulama eklemek için                
             // services.AddAuthorization(); // Yetkilendirme eklemek için
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyCorsPolicy", builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -32,6 +40,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1"));
+                app.UseCors("MyCorsPolicy");
             }
             else
             {
