@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,10 @@ namespace AccidentStatisticalAnalysisSystem.WepApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+
+            });
             // Gerekli servislerin ve bağımlılıkların eklenmesi burada yapılır.
             services.AddControllers(); // Web API kontrolcülerini etkinleştirir.
             services.AddSwaggerGen(); // Swagger belgeleri eklemek için                     

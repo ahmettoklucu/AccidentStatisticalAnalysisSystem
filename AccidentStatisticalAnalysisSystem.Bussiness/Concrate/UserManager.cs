@@ -1,6 +1,7 @@
 ﻿using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.RequestModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResultModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.Bussiness.Utilities;
 using AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentValidation;
@@ -95,17 +96,75 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
         {
             _userDal.DeleteAsyc(user);
         }
-        public async Task<User> GetAsyc(Guid UserId)
+        public async Task<UserResponseModele> GetAsyc(Guid UserId)
         {
-            return await _userDal.GetAsyc(p => p.Id == UserId);
+            var item= _userDal.GetAsyc(p => p.Id == UserId);
+
+            UserResponseModele userResponseModele = new UserResponseModele
+            {
+                Name = item.Result.Name,
+                PhoneNumber = item.Result.PhoneNumber,
+                SureName = item.Result.SureName,
+                RoleId = item.Result.RoleId,
+                EMail = item.Result.EMail,
+                Id = item.Result.Id,
+                IsDelete = item.Result.IsDelete,
+                StarDate = item.Result.StarDate,
+                Password = item.Result.Password,
+                SecretKey = item.Result.SecretKey,
+                UserName = item.Result.UserName
+            };
+            return  userResponseModele;
         }
-        public async Task<List<User>> GetAllAsyc()
+        public async Task<List<UserResponseModele>> GetAllAsyc()
         {
-            return await _userDal.GetAllAsyc();
+            List<UserResponseModele> userResponseModeles = new List<UserResponseModele>();
+            var Users=  _userDal.GetAllAsyc();
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(JsonConvert.SerializeObject(Users));
+            foreach (var item in users)
+            {
+                UserResponseModele userResponseModele = new UserResponseModele
+                {
+                    Name = item.Name,
+                    PhoneNumber = item.PhoneNumber,
+                    SureName = item.SureName,
+                    RoleId = item.RoleId,
+                    EMail = item.EMail,
+                    Id = item.Id,
+                    IsDelete = item.IsDelete,
+                    StarDate = item.StarDate,
+                    Password = item.Password,
+                    SecretKey = item.SecretKey,
+                    UserName = item.UserName
+                };
+                userResponseModeles.Add(userResponseModele);
+            }
+            return userResponseModeles;
         }
-        public async Task<List<User>> GetUserByUserNameAsyc(string userName)
+        public async Task<List<UserResponseModele>> GetUserByUserNameAsyc(string userName)
         {
-            return await _userDal.GetAllAsyc(p => p.UserName.ToLower().Contains(userName.ToLower()));
+            List<UserResponseModele> userResponseModeles = new List<UserResponseModele>();
+            var Users = _userDal.GetAllAsyc(p => p.UserName.ToLower().Contains(userName.ToLower()));
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(JsonConvert.SerializeObject(Users));
+            foreach (var item in users)
+            {
+                UserResponseModele userResponseModele = new UserResponseModele
+                {
+                    Name = item.Name,
+                    PhoneNumber = item.PhoneNumber,
+                    SureName = item.SureName,
+                    RoleId = item.RoleId,
+                    EMail = item.EMail,
+                    Id = item.Id,
+                    IsDelete = item.IsDelete,
+                    StarDate = item.StarDate,
+                    Password = item.Password,
+                    SecretKey = item.SecretKey,
+                    UserName = item.UserName
+                };
+                userResponseModeles.Add(userResponseModele);
+            }
+            return userResponseModeles;
         }
         public bool UpdateAsyc(User user, out string mesaj)
         {
@@ -134,64 +193,24 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return result;
         }
-        public   bool EmailLogin(string Email, string password, out string Messege,out Token token)
+        public async Task<LoginResult> EmailLogin(LoginRequest loginRequest)
         {
-            bool result = false;
-            Messege = "";
-            token = null;
-            var User = _userDal.GetAsyc(p => p.EMail == Email);
+            var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message = "";
+            loginResult.Token = null;
+            var User = _userDal.GetAsyc(p => p.PhoneNumber == loginRequest.UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password,User.Result.Password) == false)
+                if (VerifySHA256Hash(loginRequest.Password, User.Result.Password) == false)
                 {
-                    Messege = "Şifre hatalı tekrar deneyiniz.";
-                    User = null;
-
-                }
-                else
-                {
-                    Messege = "Giriş başarili.";
-                    UserResponseModele userResponseModele = new UserResponseModele();
-                    userResponseModele.Name=User.Result.Name;
-                    userResponseModele.SureName=User.Result.SureName;
-                    userResponseModele.PhoneNumber=User.Result.PhoneNumber;
-                    userResponseModele.EMail=User.Result.EMail;
-                    userResponseModele.Id=User.Result.Id;
-                    userResponseModele.IsDelete = User.Result.IsDelete;
-                    userResponseModele.StarDate=User.Result.StarDate;
-                    userResponseModele.SecretKey=User.Result.SecretKey;
-                    userResponseModele.UserName=User.Result.UserName;
-                    userResponseModele.Password = User.Result.Password;
-                    userResponseModele.RoleId=User.Result.RoleId;
-                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
-                    result = true;
-
-                }
-
-            }
-            else
-            {
-                Messege = "Bu Email Adresi sistemde bulunmamaktadir.";
-            }
-            return  result;
-        }
-        public bool PhoneLogin(string Phone, string password, out string Messege,out Token token)
-        {
-            bool result = false;
-            Messege = "";
-            token = null;
-            var User = _userDal.GetAsyc(p => p.PhoneNumber == Phone);
-            if (User != null)
-            {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
-                {
-                    Messege = "Şifre hatalı tekrar deneyiniz.";
+                    loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
                 }
                 else
                 {
-                    Messege = "Giriş başarili.";
-                    result = true;
+                    loginResult.Message = "Giriş başarili.";
+                    loginResult.Success = true;
 
                     UserResponseModele userResponseModele = new UserResponseModele();
                     userResponseModele.Name = User.Result.Name;
@@ -205,33 +224,38 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     userResponseModele.UserName = User.Result.UserName;
                     userResponseModele.Password = User.Result.Password;
                     userResponseModele.RoleId = User.Result.RoleId;
-                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
+                    var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
+                    loginResult.Token = generateTokenResult.token;
+                    loginResult.Message = generateTokenResult.Error;
                 }
 
             }
             else
             {
-                Messege = "Bu telefon sistemde bulunmamaktadir.";
+                loginResult.Message = "Bu telefon sistemde bulunmamaktadir.";
+                
             }
-            return  result;
+            return  loginResult;
         }
-        public  bool UserNameLogin(string UserName, string password, out string Messege,out Token token)
+        public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest)
         {
-            bool result = false;
-            Messege = "";
-            token = null;
-            var User = _userDal.GetAsyc(p => p.UserName == UserName);
+            var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message = "";
+            loginResult.Token = null;
+            var User = _userDal.GetAsyc(p => p.PhoneNumber == loginRequest.UserName);
             if (User != null)
             {
-                if (VerifySHA256Hash(password, User.Result.Password) == false)
+                if (VerifySHA256Hash(loginRequest.Password, User.Result.Password) == false)
                 {
-                    Messege = "Şifre hatalı tekrar deneyiniz.";
+                    loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
                     User = null;
                 }
                 else
                 {
-                    Messege = "Giriş başarili.";
-                    result = true;
+                    loginResult.Message = "Giriş başarili.";
+                    loginResult.Success = true;
+
                     UserResponseModele userResponseModele = new UserResponseModele();
                     userResponseModele.Name = User.Result.Name;
                     userResponseModele.SureName = User.Result.SureName;
@@ -244,23 +268,109 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     userResponseModele.UserName = User.Result.UserName;
                     userResponseModele.Password = User.Result.Password;
                     userResponseModele.RoleId = User.Result.RoleId;
-                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
+                    var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
+                    loginResult.Token = generateTokenResult.token;
+                    loginResult.Message = generateTokenResult.Error;
                 }
 
             }
             else
             {
-                Messege = "Bu Kullanıcı ismi sistemde bulunmamaktadir.";
+                loginResult.Message = "Bu telefon sistemde bulunmamaktadir.";
             }
-            return  result;
+            return  loginResult;
         }
-        public  async Task<List<User>> GetUserByPhoneAsyc(string Phone)
+        public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest)
         {
-            return await _userDal.GetAllAsyc(p => p.PhoneNumber.ToLower().Contains(Phone.ToLower()));
+            var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message= "";
+            loginResult.Token = null;
+            var User = _userDal.GetAsyc(p => p.UserName == loginRequest.UserName);
+            if (User != null)
+            {
+                if (VerifySHA256Hash(loginRequest.Password, User.Result.Password) == false)
+                {
+                    loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
+                    User = null;
+                }
+                else
+                {
+                    loginResult.Message = "Giriş başarili.";
+                    loginResult.Success = true;
+                    UserResponseModele userResponseModele = new UserResponseModele();
+                    userResponseModele.Name = User.Result.Name;
+                    userResponseModele.SureName = User.Result.SureName;
+                    userResponseModele.PhoneNumber = User.Result.PhoneNumber;
+                    userResponseModele.EMail = User.Result.EMail;
+                    userResponseModele.Id = User.Result.Id;
+                    userResponseModele.IsDelete = User.Result.IsDelete;
+                    userResponseModele.StarDate = User.Result.StarDate;
+                    userResponseModele.SecretKey = User.Result.SecretKey;
+                    userResponseModele.UserName = User.Result.UserName;
+                    userResponseModele.Password = User.Result.Password;
+                    userResponseModele.RoleId = User.Result.RoleId;
+                    var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
+                    loginResult.Token = generateTokenResult.token;
+                    loginResult.Message = generateTokenResult.Error;
+                }
+
+            }
+            else
+            {
+                loginResult.Message = "Bu Kullanıcı ismi sistemde bulunmamaktadir.";
+            }
+            return loginResult;
         }
-        public async Task<List<User>> GetUserByEMailAsyc(string EMail)
+        public  async Task<List<UserResponseModele>> GetUserByPhoneAsyc(string Phone)
         {
-            return await _userDal.GetAllAsyc(p => p.EMail.ToLower().Contains(EMail.ToLower()));
+            List<UserResponseModele> userResponseModeles = new List<UserResponseModele>();
+            var Users= _userDal.GetAllAsyc(p => p.PhoneNumber.ToLower().Contains(Phone.ToLower()));
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(JsonConvert.SerializeObject(Users));
+            foreach (var item in users)
+            {
+                UserResponseModele userResponseModele = new UserResponseModele
+                {
+                    Name = item.Name,
+                    PhoneNumber = item.PhoneNumber,
+                    SureName = item.SureName,
+                    RoleId = item.RoleId,
+                    EMail = item.EMail,
+                    Id = item.Id,
+                    IsDelete = item.IsDelete,
+                    StarDate = item.StarDate,
+                    Password = item.Password,
+                    SecretKey = item.SecretKey,
+                    UserName = item.UserName
+                };
+                userResponseModeles.Add(userResponseModele);
+            }
+            return userResponseModeles;
+        }
+        public async Task<List<UserResponseModele>> GetUserByEMailAsyc(string EMail)
+        {
+            List<UserResponseModele> userResponseModeles = new List<UserResponseModele>();
+            var Users = _userDal.GetAllAsyc(p => p.EMail.ToLower().Contains(EMail.ToLower()));
+            List<User> users = JsonConvert.DeserializeObject<List<User>>(JsonConvert.SerializeObject(Users));
+            foreach (var item in users)
+            {
+                UserResponseModele userResponseModele = new UserResponseModele
+                {
+                    Name = item.Name,
+                    PhoneNumber = item.PhoneNumber,
+                    SureName = item.SureName,
+                    RoleId = item.RoleId,
+                    EMail = item.EMail,
+                    Id = item.Id,
+                    IsDelete = item.IsDelete,
+                    StarDate = item.StarDate,
+                    Password = item.Password,
+                    SecretKey = item.SecretKey,
+                    UserName = item.UserName
+                };
+                userResponseModeles.Add(userResponseModele);
+            }
+            return userResponseModeles;
         }
         public  void ChangePassword(string OldPassword, string NewPassword, Guid UserId,out string Messege)
         {
@@ -287,44 +397,55 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 Messege = "Bir hata Oluştu.";
             }
         }
-        public bool Login(LoginRequest loginRequest, out string Messege, out Token token)
+        public async Task<LoginResult> Login(LoginRequest loginRequest)
         {
-            bool result = false;
-            Messege = "";
-            token = null;
-            var User = _userDal.GetAsyc(p => p.UserName == loginRequest.UserName || p.EMail == loginRequest.UserName || p.PhoneNumber == loginRequest.UserName);
-            if (User != null)
+            var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message = "";
+            loginResult.Token = null;
+
+            try
             {
-                if (VerifySHA256Hash(loginRequest.Password, User.Result.Password) == false)
+                var user = _userDal.GetAsyc(p => p.UserName.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.EMail.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.PhoneNumber.Equals(loginRequest.UserName, StringComparison.Ordinal));
+                if (user.Result != null)
                 {
-                    Messege = "Şifre hatalı tekrar deneyiniz.";
-                    User = null;
+                    if (VerifySHA256Hash(loginRequest.Password, user.Result.Password) == false)
+                    {
+                        loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
+                        user = null;
+                    }
+                    else
+                    {
+                        loginResult.Message = "Giriş başarılı.";
+                        loginResult.Success = true;
+                        UserResponseModele userResponseModele = new UserResponseModele();
+                        userResponseModele.Name = user.Result.Name;
+                        userResponseModele.SureName = user.Result.SureName;
+                        userResponseModele.PhoneNumber = user.Result.PhoneNumber;
+                        userResponseModele.EMail = user.Result.EMail;
+                        userResponseModele.Id = user.Result.Id;
+                        userResponseModele.IsDelete = user.Result.IsDelete;
+                        userResponseModele.StarDate = user.Result.StarDate;
+                        userResponseModele.SecretKey = user.Result.SecretKey;
+                        userResponseModele.UserName = user.Result.UserName;
+                        userResponseModele.Password = user.Result.Password;
+                        userResponseModele.RoleId = user.Result.RoleId;
+                        var generateTokenResult= TokenProcess.GenerateToken(userResponseModele, 25);
+                        loginResult.Token = generateTokenResult.token;
+                        loginResult.Message = generateTokenResult.Error;
+                    }
                 }
                 else
                 {
-                    Messege = "Giriş başarili.";
-                    result = true;
-                    UserResponseModele userResponseModele = new UserResponseModele();
-                    userResponseModele.Name = User.Result.Name;
-                    userResponseModele.SureName = User.Result.SureName;
-                    userResponseModele.PhoneNumber = User.Result.PhoneNumber;
-                    userResponseModele.EMail = User.Result.EMail;
-                    userResponseModele.Id = User.Result.Id;
-                    userResponseModele.IsDelete = User.Result.IsDelete;
-                    userResponseModele.StarDate = User.Result.StarDate;
-                    userResponseModele.SecretKey = User.Result.SecretKey;
-                    userResponseModele.UserName = User.Result.UserName;
-                    userResponseModele.Password = User.Result.Password;
-                    userResponseModele.RoleId = User.Result.RoleId;
-                    TokenProcess.GenerateToken(userResponseModele, 25, out token, out Messege);
+                    loginResult.Message = "Bu Kullanıcı sistemde bulunmamaktadır.";
                 }
-
             }
-            else
+            catch (Exception e)
             {
-                Messege = "Bu Kullanıcı sistemde bulunmamaktadir.";
+                loginResult.Success = false;
+                loginResult.Message = "Hata sistem yöneticisi ile iletişime geçin.";
             }
-            return result;
+            return loginResult;
         }
     }
 }

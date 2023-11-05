@@ -6,6 +6,7 @@ using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
@@ -44,48 +45,54 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginRequest loginRequest)
+        public async Task<IActionResult> Login(string UserName,string Password)
         {
-            string message;
-            Token token;
-            bool result= _userService.Login(loginRequest, out message, out token);
-            if (result==true)
+            LoginRequest loginRequest = new LoginRequest();
+            loginRequest.UserName = UserName;
+            loginRequest.Password = Password;
+            
+
+            var result= _userService.Login(loginRequest);
+            if (result.Result.Success==true)
             {
-                return Ok(token.JWT);
+                return Ok(result.Result.Token.JWT);
             }
             else
             {
-                return BadRequest(message);
+                return BadRequest(result.Result.Message);
             }
         }
         [HttpGet]
-        public async Task<IActionResult> PhoneLogin(string Phone, string password)
+        public async Task<IActionResult> PhoneLogin(string UserName, string Password)
         {
-            string message;
-            Token token;
-            bool resul = _userService.PhoneLogin(Phone, password, out message, out token);
-            if (resul == true)
+            LoginRequest loginRequest = new LoginRequest();
+            loginRequest.UserName = UserName;
+            loginRequest.Password = Password;
+
+            var result = _userService.PhoneLogin(loginRequest);
+            if (result.Result.Success == true)
             {
-                return Ok(token.JWT);
+                return Ok(result.Result.Token.JWT);
             }
             else
             {
-                return BadRequest(message);
+                return BadRequest(result.Result.Message);
             }
         }
         [HttpGet]
         public async Task<IActionResult> UserNameLogin(string UserName, string password)
         {
-            string message;
-            Token token;
-            bool resul = _userService.UserNameLogin(UserName, password, out message, out token);
-            if (resul == true)
+            var loginRequest = new LoginRequest();
+            loginRequest.UserName = UserName;
+            loginRequest.Password = password;
+            var result = _userService.UserNameLogin(loginRequest);
+            if (result.Result.Success == true)
             {
-                return Ok(token.JWT);
+                return Ok(result.Result.Token.JWT);
             }
             else
             {
-                return BadRequest(message);
+                return BadRequest(result.Result.Message);
             }
         }
         [HttpGet]
