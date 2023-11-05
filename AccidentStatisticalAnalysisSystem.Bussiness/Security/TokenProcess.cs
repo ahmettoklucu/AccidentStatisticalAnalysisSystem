@@ -48,12 +48,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
             }
             return result;
         }
-        public static GenerateTokenResult  GenerateToken(UserResponseModele user, int ExpireMinute)
+        public static LoginResult  GenerateToken(UserResponseModele user, int ExpireMinute)
         {
-            var generateTokenResult = new GenerateTokenResult();
-            generateTokenResult.token = null;
-            bool result = false;
-            generateTokenResult.Error = "";
+            var generateTokenResult = new LoginResult();
+            generateTokenResult.Token = null;
+            generateTokenResult.Success = false;
+            generateTokenResult.Message = "";
             try
             {
                 if (user != null)
@@ -75,12 +75,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                     string ByteBisi = SecretKey.ToString();
 
                     string Jwt = Jose.JWT.Encode(ClaimToken, SecretKey, JwsAlgorithm.HS256);
-                    generateTokenResult.token = new Token();
-                    generateTokenResult.token.JWT = Jwt;
-                    generateTokenResult.token.ValidMinute = ExpireMinute;
-                    generateTokenResult.token.SecretKey = user.SecretKey;
-                    generateTokenResult.token.ValidityDatetime = new DateTime().AddMinutes(20);
-                    result = true;
+                    generateTokenResult.Token = new Token();
+                    generateTokenResult.Token.JWT = Jwt;
+                    generateTokenResult.Token.ValidMinute = ExpireMinute;
+                    generateTokenResult.Token.SecretKey = user.SecretKey;
+                    generateTokenResult.Token.ValidityDatetime = new DateTime().AddMinutes(20);
+                    generateTokenResult.Success = true;
                    
                     
                 }
@@ -88,7 +88,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
             }
             catch (Exception ex)
             {
-                generateTokenResult.Error = ex.Message;
+                generateTokenResult.Message = ex.Message;
                 return generateTokenResult;
             }
 

@@ -225,8 +225,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     userResponseModele.Password = User.Result.Password;
                     userResponseModele.RoleId = User.Result.RoleId;
                     var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
-                    loginResult.Token = generateTokenResult.token;
-                    loginResult.Message = generateTokenResult.Error;
+                    loginResult.Token = generateTokenResult.Token;
+                    loginResult.Message = generateTokenResult.Message;
                 }
 
             }
@@ -269,8 +269,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     userResponseModele.Password = User.Result.Password;
                     userResponseModele.RoleId = User.Result.RoleId;
                     var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
-                    loginResult.Token = generateTokenResult.token;
-                    loginResult.Message = generateTokenResult.Error;
+                    loginResult.Token = generateTokenResult.Token;
+                    loginResult.Message = generateTokenResult.Message;
                 }
 
             }
@@ -311,8 +311,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     userResponseModele.Password = User.Result.Password;
                     userResponseModele.RoleId = User.Result.RoleId;
                     var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
-                    loginResult.Token = generateTokenResult.token;
-                    loginResult.Message = generateTokenResult.Error;
+                    loginResult.Token = generateTokenResult.Token;
+                    loginResult.Message = generateTokenResult.Message;
                 }
 
             }
@@ -431,8 +431,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = user.Result.Password;
                         userResponseModele.RoleId = user.Result.RoleId;
                         var generateTokenResult= TokenProcess.GenerateToken(userResponseModele, 25);
-                        loginResult.Token = generateTokenResult.token;
-                        loginResult.Message = generateTokenResult.Error;
+                        loginResult.Token = generateTokenResult.Token;
+                        loginResult.Message = generateTokenResult.Message;
                     }
                 }
                 else
