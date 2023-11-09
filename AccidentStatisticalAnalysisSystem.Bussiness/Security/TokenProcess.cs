@@ -81,6 +81,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                     generateTokenResult.Token.SecretKey = user.SecretKey;
                     generateTokenResult.Token.ValidityDatetime = new DateTime().AddMinutes(20);
                     generateTokenResult.Success = true;
+                    generateTokenResult.Token.Id = user.Id;
+                    generateTokenResult.Token.RoleId=user.RoleId;
+                    generateTokenResult.Token.EMail=user.EMail;
+                    generateTokenResult.Token.PhoneNumber= user.PhoneNumber;
+                    generateTokenResult.Token.UserName=user.UserName;
                    
                     
                 }

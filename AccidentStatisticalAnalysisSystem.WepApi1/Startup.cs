@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace AccidentStatisticalAnalysisSystem.WepApi
 {
+   
     public class Startup
     {
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -19,14 +24,42 @@ namespace AccidentStatisticalAnalysisSystem.WepApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-
-            });
+            var user = new User();
             // Gerekli servislerin ve bağımlılıkların eklenmesi burada yapılır.
             services.AddControllers(); // Web API kontrolcülerini etkinleştirir.
-            services.AddSwaggerGen(); // Swagger belgeleri eklemek için                     
-            // services.AddAuthentication(); // Kimlik doğrulama eklemek için                
+            services.AddSwaggerGen(); // Swagger belgeleri eklemek için
+                                      //    services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/User/Login"; // Giriş sayfasının yolu
+                options.AccessDeniedPath = "/Account/AccessDenied"; // Erişim reddedildi sayfasının yolu
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //.AddJwtBearer(options =>
+            // {
+            //     options.TokenValidationParameters = new TokenValidationParameters
+            //     {
+            //         ValidateIssuer = false,
+            //         ValidateAudience = false,
+            //         ValidateLifetime = true,
+            //         ValidateIssuerSigningKey = true,
+            //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(user.SecretKey.ToString()))
+            //     };
+            // });
+
+            services.AddAuthorization(); // Kimlik doğrulama eklemek için                
             // services.AddAuthorization(); // Yetkilendirme eklemek için
             services.AddCors(options =>
             {
