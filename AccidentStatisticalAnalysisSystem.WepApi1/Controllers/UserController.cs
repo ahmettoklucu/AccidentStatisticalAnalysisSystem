@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
@@ -139,16 +140,22 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
                 return BadRequest(result.Result.Message);
             }
         }
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result=_userService.GetAllAsyc();
+            var result = await _userService.GetAllAsyc();  // Asenkron operasyonu bekleyin
 
-                return Ok(result.Result);
-  
+            // Direkt olarak JSON serileştirmesi yapabilirsiniz
+            var users = JsonConvert.DeserializeObject<List<UserResponseModele>>(result.ToString());
 
-            
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            var json = JsonConvert.SerializeObject(users, settings);
+            return Ok(json);
         }
+
     }
 }

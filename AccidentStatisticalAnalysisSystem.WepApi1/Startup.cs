@@ -30,22 +30,13 @@ namespace AccidentStatisticalAnalysisSystem.WepApi
             services.AddSwaggerGen(); // Swagger belgeleri eklemek için
                                       //    services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/User/Login"; // Giriş sayfasının yolu
-                options.AccessDeniedPath = "/Account/AccessDenied"; // Erişim reddedildi sayfasının yolu
-            });
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.Events = new CookieAuthenticationEvents
-                {
-                    OnRedirectToLogin = context =>
-                    {
-                        context.Response.StatusCode = 401;
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+       .AddCookie(options =>
+       {
+           options.Cookie.HttpOnly = true;
+           options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+           options.LoginPath = "User/Login";
+       });
+
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //.AddJwtBearer(options =>
             // {
@@ -87,6 +78,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

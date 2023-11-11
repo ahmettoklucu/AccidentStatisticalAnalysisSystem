@@ -14,18 +14,18 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
 {
     public interface IUserService
     {
-        Task<List<UserResponseModele>> GetAllAsyc();
-        Task<List<UserResponseModele>> GetUserByUserNameAsyc(string userName);
-        Task<List<UserResponseModele>> GetUserByPhoneAsyc(string Phone);
-        Task<List<UserResponseModele>> GetUserByEMailAsyc(string EMail);
+        Task<string> GetAllAsyc();
+        Task<string> GetUserByUserNameAsyc(string userName);
+        Task<string> GetUserByPhoneAsyc(string Phone);
+        Task<string> GetUserByEMailAsyc(string EMail);
         Task<UserResponseModele> GetAsyc(Guid UserId);
-        bool AddAsyc(User user, out string Mesaj);
-        bool UpdateAsyc(User user, out string Mesaj);
-        void DeleteAsyc(User user);
+        Task<ResultModele> AddAsyc(User user);
+        Task<ResultModele> UpdateAsyc(User user);
+        Task<ResultModele> DeleteAsyc(User user);
         Task<LoginResult> Login(LoginRequest loginRequest);
         Task<LoginResult> EmailLogin(LoginRequest loginRequest);
         Task<LoginResult> PhoneLogin(LoginRequest loginRequest);
         Task<LoginResult> UserNameLogin( LoginRequest loginRequest);
-        void ChangePassword(string OldPassword,string NewPassword,Guid UserId,out string Messege);
+        Task<ResultModele> ChangePassword(string OldPassword,string NewPassword,Guid UserId);
     }
 }
