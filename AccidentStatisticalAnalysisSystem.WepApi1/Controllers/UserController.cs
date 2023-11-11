@@ -37,15 +37,15 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             user.PhoneNumber = userResponseModele.PhoneNumber;
             user.EMail = userResponseModele.EMail; 
             user.UserName = userResponseModele.UserName;
-            bool addedProduct =  _userService.AddAsyc(user,out string message);
-            if (addedProduct==true)
+            var addedProduct = await  _userService.AddAsyc(user);
+            if (addedProduct.Success==true)
             {
-                return Ok(message);
+                return Ok(addedProduct.Message);
 
             }
             else
             {
-                return BadRequest(message);
+                return BadRequest(addedProduct.Message);
             }
 
 
@@ -140,6 +140,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
                 return BadRequest(result.Result.Message);
             }
         }
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
