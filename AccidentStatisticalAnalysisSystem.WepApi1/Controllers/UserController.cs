@@ -24,7 +24,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         private readonly IUserService _userService;
         public UserController()
         {
-            _userService = new UserManager(new EfUserDal());
+            _userService = new UserManager(new EfUserDal(),HttpContext);
         }
         [AllowAnonymous]
         [HttpPost]
@@ -41,17 +41,15 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             if (addedProduct.Success==true)
             {
                 return Ok(addedProduct.Message);
-
             }
             else
             {
                 return BadRequest(addedProduct.Message);
             }
-
-
         }
         [AllowAnonymous]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Login(string UserName,string Password)
         {
             LoginRequest loginRequest = new LoginRequest();
@@ -62,18 +60,12 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             var result= _userService.Login(loginRequest);
             if (result.Result.Success==true)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, result.Result.Token.Id.ToString()),
-                    new Claim(ClaimTypes.Role, result.Result.Token.RoleId.ToString()),
-                    new Claim(ClaimTypes.Email, result.Result.Token.EMail),
-                    new Claim(ClaimTypes.MobilePhone, result.Result.Token.PhoneNumber),
-                    new Claim(ClaimTypes.NameIdentifier, result.Result.Token.UserName.ToString()),
-                    // Diğer gerekli bilgileri ekleyebilirsiniz.
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                 HttpContext.Response.Cookies.Append("AuthToken", result.Result.Token.JWT, new CookieOptions
+                 {
+                     HttpOnly = true,
+                     Secure = true,
+                     SameSite = SameSiteMode.Strict,
+                 });
                 return Ok(result.Result.Token.JWT);
             }
             else
@@ -92,19 +84,8 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             var result = _userService.PhoneLogin(loginRequest);
             if (result.Result.Success == true)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, result.Result.Token.Id.ToString()),
-                    new Claim(ClaimTypes.Role, result.Result.Token.RoleId.ToString()),
-                    new Claim(ClaimTypes.Email, result.Result.Token.EMail.ToString()),
-                    new Claim(ClaimTypes.MobilePhone, result.Result.Token.PhoneNumber.ToString()),
-                    new Claim(ClaimTypes.NameIdentifier, result.Result.Token.UserName.ToString()),
-                    // Diğer gerekli bilgileri ekleyebilirsiniz.
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-                return Ok(result.Result.Token.JWT);
+                
+                return Ok(new  {Token= result.Result.Token.JWT });
             }
             else
             {
@@ -121,18 +102,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             var result = _userService.UserNameLogin(loginRequest);
             if (result.Result.Success == true)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, result.Result.Token.Id.ToString()),
-                    new Claim(ClaimTypes.Role, result.Result.Token.RoleId.ToString()),
-                    new Claim(ClaimTypes.Email, result.Result.Token.EMail.ToString()),
-                    new Claim(ClaimTypes.MobilePhone, result.Result.Token.PhoneNumber.ToString()),
-                    new Claim(ClaimTypes.NameIdentifier, result.Result.Token.UserName.ToString()),
-                    // Diğer gerekli bilgileri ekleyebilirsiniz.
-                };
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                
                 return Ok(result.Result.Token.JWT);
             }
             else

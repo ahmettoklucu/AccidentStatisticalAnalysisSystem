@@ -7,6 +7,7 @@ using AccidentStatisticalAnalysisSystem.Bussiness.Utilities;
 using AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentValidation;
 using AccidentStatisticalAnalysisSystem.DataAccess.Abstract;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Newtonsoft.Json;
 using System;
@@ -22,10 +23,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
     public class UserManager:IUserService
     {
         private readonly IUserDal _userDal;
-        public UserManager(IUserDal userDal)
+        private readonly HttpContext _httpContext;
+
+        public UserManager(IUserDal userDal, HttpContext httpContext)
         {
             _userDal = userDal;
-
+            _httpContext = httpContext;
         }
         private string ComputeSHA256Hash(string rawData)
         {
@@ -270,10 +273,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.SecretKey = User.Result.SecretKey;
                         userResponseModele.UserName = User.Result.UserName;
                         userResponseModele.Password = User.Result.Password;
-                        userResponseModele.RoleId = User.Result.RoleId;
-                        var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
+                        userResponseModele.RoleId = User.Result.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
+                        var generateTokenResult = TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+
+                        // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
                         loginResult.Token = generateTokenResult.Token;
-                        loginResult.Message = generateTokenResult.Message;
                     }
 
                 }
@@ -325,9 +329,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.UserName;
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
-                        var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
+                        var generateTokenResult = TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+
+                        // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
                         loginResult.Token = generateTokenResult.Token;
-                        loginResult.Message = generateTokenResult.Message;
                     }
 
                 }
@@ -376,9 +381,11 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.UserName;
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
-                        var generateTokenResult = TokenProcess.GenerateToken(userResponseModele, 25);
+                        userResponseModele.RoleId = User.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
+                        var generateTokenResult = TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+
+                        // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
                         loginResult.Token = generateTokenResult.Token;
-                        loginResult.Message = generateTokenResult.Message;
                     }
 
                 }
@@ -484,7 +491,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = user.UserName;
                         userResponseModele.Password = user.Password;
                         userResponseModele.RoleId = user.RoleId;
-                        var generateTokenResult= TokenProcess.GenerateToken(userResponseModele, 25);
+                        var generateTokenResult = new LoginResult(); // Yeni bir LoginResult nesnesi oluşturun.
+                        TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+
+                        loginResult.Token = generateTokenResult.Token;
 
                         loginResult.Token = generateTokenResult.Token;
                         loginResult.Message = generateTokenResult.Message;
