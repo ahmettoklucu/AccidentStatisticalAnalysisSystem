@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Http;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResultModel;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
 {
@@ -50,7 +53,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
             return result;
         }
 
-        public static LoginResult GenerateToken(HttpContext httpContext, UserResponseModele user, int ExpireMinute)
+        public static async Task<LoginResult> GenerateToken(HttpContext httpContext, UserResponseModele user, int ExpireMinute)
         {
             LoginResult generateTokenResult = new LoginResult();
             generateTokenResult.Token = null;
@@ -61,33 +64,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
             {
                 if (user != null && httpContext != null)
                 {
-                    var ClaimToken = new Dictionary<string, object>()
-                    {
-                        { "UserId", user.Id },
-                        { "RoleId", user.RoleId },
-                        { "Email", user.EMail },
-                        { "PhoneNumber", user.PhoneNumber },
-                        { "UserName", user.UserName },
-                    };
-
-                    string StrSecretKey = user.SecretKey.ToString();
-                    var SecretKey = Encoding.UTF8.GetBytes(StrSecretKey);
-
-                    string Jwt = Jose.JWT.Encode(ClaimToken, SecretKey, JwsAlgorithm.HS256);
-
-                    generateTokenResult.Token = new Token();
-                    generateTokenResult.Token.JWT = Jwt;
-                    generateTokenResult.Token.ValidMinute = ExpireMinute;
-                    generateTokenResult.Token.SecretKey = user.SecretKey;
-                    generateTokenResult.Token.ValidityDatetime = DateTime.Now.AddMinutes(ExpireMinute);
-                    generateTokenResult.Success = true;
-                    generateTokenResult.Token.Id = user.Id;
-                    generateTokenResult.Token.RoleId = user.RoleId;
-                    generateTokenResult.Token.EMail = user.EMail;
-                    generateTokenResult.Token.PhoneNumber = user.PhoneNumber;
-                    generateTokenResult.Token.UserName = user.UserName;
-
-                    // Claims oluşturma
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -97,14 +73,32 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                         new Claim(ClaimTypes.Name, user.UserName),
                     };
 
-                    // ClaimsIdentity oluşturma
-                    var identity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+                    string StrSecretKey = "9BEF3695 - 8687 - 42B9 - B473 - A9BDD260984E";
+                    var SecretKey = Encoding.UTF8.GetBytes(StrSecretKey);
 
-                    // ClaimsPrincipal oluşturma
-                    var principal = new ClaimsPrincipal(identity);
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var tokenDescriptor = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(claims),
+                        Expires = DateTime.UtcNow.AddMinutes(ExpireMinute),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(SecretKey), SecurityAlgorithms.HmacSha256Signature)
+                    };
 
+                    var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                    generateTokenResult.Token = new Token();
+                    generateTokenResult.Token.JWT = tokenHandler.WriteToken(token);
+                    generateTokenResult.Token.ValidMinute = ExpireMinute;
+                    generateTokenResult.Token.SecretKey = user.SecretKey;
+                    generateTokenResult.Token.ValidityDatetime = DateTime.Now.AddMinutes(ExpireMinute);
+                    generateTokenResult.Success = true;
+                    generateTokenResult.Token.Id = user.Id;
+                    generateTokenResult.Token.RoleId = user.RoleId;
+                    generateTokenResult.Token.EMail = user.EMail;
+                    generateTokenResult.Token.PhoneNumber = user.PhoneNumber;
+                    generateTokenResult.Token.UserName = user.UserName;
                     // HttpContext'e kimliği doğrulama işlemi ekleme
-                    httpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, principal).Wait(); // Asenkron işlemi senkron hale getirme
+                    await httpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims)));
                 }
 
                 return generateTokenResult;
@@ -117,4 +111,5 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
         }
     }
 }
+    
 

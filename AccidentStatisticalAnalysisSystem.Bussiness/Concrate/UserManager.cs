@@ -25,10 +25,9 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
         private readonly IUserDal _userDal;
         private readonly HttpContext _httpContext;
 
-        public UserManager(IUserDal userDal, HttpContext httpContext)
+        public UserManager(IUserDal userDal)
         {
             _userDal = userDal;
-            _httpContext = httpContext;
         }
         private string ComputeSHA256Hash(string rawData)
         {
@@ -241,7 +240,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public async Task<LoginResult> EmailLogin(LoginRequest loginRequest)
+        public async Task<LoginResult> EmailLogin(LoginRequest loginRequest, HttpContext httpContext)
         {
             var loginResult = new LoginResult();
             try
@@ -274,10 +273,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.Result.UserName;
                         userResponseModele.Password = User.Result.Password;
                         userResponseModele.RoleId = User.Result.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        var generateTokenResult = TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+                        var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
 
                         // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
-                        loginResult.Token = generateTokenResult.Token;
+                        loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
+                        loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
+                        loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
                     }
 
                 }
@@ -296,7 +297,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
            
             return  loginResult;
         }
-        public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest)
+        public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest, HttpContext httpContext)
         {
             var loginResult = new LoginResult();
             try
@@ -329,10 +330,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.UserName;
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
-                        var generateTokenResult = TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+                        var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
 
                         // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
-                        loginResult.Token = generateTokenResult.Token;
+                        loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
+                        loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
+                        loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
                     }
 
                 }
@@ -349,7 +352,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             };
             return  loginResult;
         }
-        public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest)
+        public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest, HttpContext httpContext)
         {
             var loginResult = new LoginResult();
             try
@@ -382,10 +385,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
                         userResponseModele.RoleId = User.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        var generateTokenResult = TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+                        var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
 
                         // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
-                        loginResult.Token = generateTokenResult.Token;
+                        loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
+                        loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
+                        loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
                     }
 
                 }
@@ -458,7 +463,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public async Task<LoginResult> Login(LoginRequest loginRequest)
+        public async Task<LoginResult> Login(LoginRequest loginRequest,HttpContext httpContext)
         {
             var loginResult = new LoginResult();
             loginResult.Success = false;
@@ -492,7 +497,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = user.Password;
                         userResponseModele.RoleId = user.RoleId;
                         var generateTokenResult = new LoginResult(); // Yeni bir LoginResult nesnesi oluşturun.
-                        TokenProcess.GenerateToken(_httpContext, userResponseModele, 25);
+                        TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
 
                         loginResult.Token = generateTokenResult.Token;
 

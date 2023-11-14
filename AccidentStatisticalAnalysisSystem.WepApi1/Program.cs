@@ -9,54 +9,44 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Servisleri konteynýra ekle.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Kullanýcýyý oluþtur.
-var user = new User();
-
-
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(user.SecretKey.ToString()))
-    };
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            Console.WriteLine("JWT Authentication Failed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        }
-    };
-});
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9BEF3695-8687-42B9-B473-A9BDD260984E"))
+        };
+        options.Events = new JwtBearerEvents
+        {
 
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("JWT Authentication Failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            }
+        };
+    });
 
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// HTTP isteði pipeline'ýný yapýlandýr.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseAuthentication();  // UseAuthentication'ý UseRouting'den önce ekleyin.
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

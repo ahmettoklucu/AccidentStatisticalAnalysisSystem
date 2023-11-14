@@ -24,7 +24,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         private readonly IUserService _userService;
         public UserController()
         {
-            _userService = new UserManager(new EfUserDal(),HttpContext);
+            _userService = new UserManager(new EfUserDal());
         }
         [AllowAnonymous]
         [HttpPost]
@@ -57,15 +57,9 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             loginRequest.Password = Password;
             
 
-            var result= _userService.Login(loginRequest);
+            var result= _userService.Login(loginRequest,HttpContext);
             if (result.Result.Success==true)
             {
-                 HttpContext.Response.Cookies.Append("AuthToken", result.Result.Token.JWT, new CookieOptions
-                 {
-                     HttpOnly = true,
-                     Secure = true,
-                     SameSite = SameSiteMode.Strict,
-                 });
                 return Ok(result.Result.Token.JWT);
             }
             else
@@ -81,7 +75,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             loginRequest.UserName = UserName;
             loginRequest.Password = Password;
 
-            var result = _userService.PhoneLogin(loginRequest);
+            var result = _userService.PhoneLogin(loginRequest, HttpContext);
             if (result.Result.Success == true)
             {
                 
@@ -99,7 +93,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             var loginRequest = new LoginRequest();
             loginRequest.UserName = UserName;
             loginRequest.Password = password;
-            var result = _userService.UserNameLogin(loginRequest);
+            var result = _userService.UserNameLogin(loginRequest,HttpContext);
             if (result.Result.Success == true)
             {
                 
