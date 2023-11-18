@@ -33,7 +33,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 return Task.CompletedTask;
             }
         };
+        
     });
+
 
 builder.Services.AddAuthorization();
 
@@ -42,7 +44,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI();0
 }
 app.UseHttpsRedirection();
 app.UseRouting();

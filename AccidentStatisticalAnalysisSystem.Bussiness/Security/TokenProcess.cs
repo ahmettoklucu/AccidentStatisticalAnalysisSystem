@@ -59,7 +59,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
             generateTokenResult.Token = null;
             generateTokenResult.Success = false;
             generateTokenResult.Message = "";
-
             try
             {
                 if (user != null && httpContext != null)
@@ -72,10 +71,8 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                         new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
                         new Claim(ClaimTypes.Name, user.UserName),
                     };
-
                     string StrSecretKey = "9BEF3695 - 8687 - 42B9 - B473 - A9BDD260984E";
                     var SecretKey = Encoding.UTF8.GetBytes(StrSecretKey);
-
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
@@ -83,9 +80,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                         Expires = DateTime.UtcNow.AddMinutes(ExpireMinute),
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(SecretKey), SecurityAlgorithms.HmacSha256Signature)
                     };
-
                     var token = tokenHandler.CreateToken(tokenDescriptor);
-
                     generateTokenResult.Token = new Token();
                     generateTokenResult.Token.JWT = tokenHandler.WriteToken(token);
                     generateTokenResult.Token.ValidMinute = ExpireMinute;
@@ -97,10 +92,9 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                     generateTokenResult.Token.EMail = user.EMail;
                     generateTokenResult.Token.PhoneNumber = user.PhoneNumber;
                     generateTokenResult.Token.UserName = user.UserName;
-                    // HttpContext'e kimliği doğrulama işlemi ekleme
+                    await httpContext.AuthenticateAsync();
                     await httpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims)));
                 }
-
                 return generateTokenResult;
             }
             catch (Exception ex)

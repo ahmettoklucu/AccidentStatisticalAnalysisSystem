@@ -173,8 +173,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             {
                 return ex.Message;
             }
-           
-            
         }
         public async Task<string> GetUserByUserNameAsyc(string userName)
         {
@@ -260,7 +258,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     {
                         loginResult.Message = "Giriş başarili.";
                         loginResult.Success = true;
-
                         UserResponseModele userResponseModele = new UserResponseModele();
                         userResponseModele.Name = User.Result.Name;
                         userResponseModele.SureName = User.Result.SureName;
@@ -294,7 +291,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 loginResult.Message = "HATA" + e.Message;
                 loginResult.Success = false;
             };
-           
             return  loginResult;
         }
         public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest, HttpContext httpContext)
@@ -386,13 +382,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.RoleId = User.RoleId;
                         userResponseModele.RoleId = User.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
                         var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
-
-                        // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
                         loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
                         loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
                         loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
                     }
-
                 }
                 else
                 {
@@ -444,7 +437,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 {
                     resultModele.Message = "Şifre hatalı tekrar deneyiniz.";
                     resultModele.Success = false;
-
                 }
                 else
                 {
@@ -498,9 +490,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.RoleId = user.RoleId;
                         var generateTokenResult = new LoginResult(); // Yeni bir LoginResult nesnesi oluşturun.
                         TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
-
-                        loginResult.Token = generateTokenResult.Token;
-
                         loginResult.Token = generateTokenResult.Token;
                         loginResult.Message = generateTokenResult.Message;
                        
