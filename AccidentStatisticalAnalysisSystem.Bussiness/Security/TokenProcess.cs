@@ -20,42 +20,58 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
 {
     public static class TokenProcess
     {
-        public static bool DecodeToken(string JWT, string SecretKey, out Token? token, out string Error)
-        {
-            bool result = false;
-            token = null;
-            Error = "";
+       public static bool ValidateToken(string token, string secretKey)
+       {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
 
             try
             {
-                string token1 = JWT;
-                var secretKey = Encoding.UTF8.GetBytes(SecretKey);
-                string json = Jose.JWT.Decode(token1, secretKey, JwsAlgorithm.HS256);
-                var DynToken = JsonConvert.DeserializeObject<dynamic>(json);
-                token = new Token();
-                token.RoleId = Convert.ToInt16(DynToken.RoleId);
-                token.Id = DynToken.Id.Value;
-                token.EMail = DynToken.Email.Value;
-                token.PhoneNumber = DynToken.PhoneNumber.Value;
-                token.UserName = DynToken.UserName.Value;
-
-                if (token != null && token.Id != null)
-                {
-                    result = true;
-                }
-
+                SecurityToken validatedToken;
+                tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                Error = ex.Message;
+                return false;
             }
+       }
 
-            return result;
-        }
-
-        public static async Task<LoginResult> GenerateToken(HttpContext httpContext, UserResponseModele user, int ExpireMinute)
+    public static TokenPayload DecodeToken(string token, string secretKey)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = new TokenValidationParameters
         {
-            LoginResult generateTokenResult = new LoginResult();
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+
+        SecurityToken validatedToken;
+        var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+
+        var tokenPayload = new TokenPayload
+        {
+            Id = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value,
+            RoleId = claimsPrincipal.FindFirst(ClaimTypes.Role).Value,
+            EMail = claimsPrincipal.FindFirst(ClaimTypes.Email).Value,
+            PhoneNumber = claimsPrincipal.FindFirst(ClaimTypes.MobilePhone).Value,
+            UserName = claimsPrincipal.FindFirst(ClaimTypes.Name).Value,
+            ValidityDatetime = validatedToken.ValidTo
+        };
+    
+        return tokenPayload;
+    }
+
+        public static  void GenerateToken(HttpContext httpContext, ref LoginResult generateTokenResult,  UserResponseModele user, int ExpireMinute)
+        {            
             generateTokenResult.Token = null;
             generateTokenResult.Success = false;
             generateTokenResult.Message = "";
@@ -71,7 +87,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                         new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
                         new Claim(ClaimTypes.Name, user.UserName),
                     };
-                    string StrSecretKey = "9BEF3695 - 8687 - 42B9 - B473 - A9BDD260984E";
+                    string StrSecretKey = "9BEF3695-8687-42B9-B473-A9BDD260984E";
                     var SecretKey = Encoding.UTF8.GetBytes(StrSecretKey);
                     var tokenHandler = new JwtSecurityTokenHandler();
                     var tokenDescriptor = new SecurityTokenDescriptor
@@ -92,16 +108,13 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
                     generateTokenResult.Token.EMail = user.EMail;
                     generateTokenResult.Token.PhoneNumber = user.PhoneNumber;
                     generateTokenResult.Token.UserName = user.UserName;
-                    await httpContext.AuthenticateAsync();
-                    await httpContext.SignInAsync(new ClaimsPrincipal(new ClaimsIdentity(claims)));
                 }
-                return generateTokenResult;
+                
             }
             catch (Exception ex)
             {
-                generateTokenResult.Message = ex.Message;
-                return generateTokenResult;
-            }
+                generateTokenResult.Message = "Sistem Yöneticisi ile görüşmeniz gerekmektedir.";                
+            }            
         }
     }
 }

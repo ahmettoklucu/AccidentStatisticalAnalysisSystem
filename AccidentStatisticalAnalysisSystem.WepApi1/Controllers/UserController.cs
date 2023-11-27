@@ -2,14 +2,9 @@
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.RequestModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
-using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Claims;
@@ -49,7 +44,6 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Login(string UserName,string Password)
         {
             LoginRequest loginRequest = new LoginRequest();
@@ -57,14 +51,15 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             loginRequest.Password = Password;
             
 
-            var result= _userService.Login(loginRequest,HttpContext);
-            if (result.Result.Success==true)
+            var result=  _userService.Login(loginRequest,HttpContext);
+            if (result.Success==true)
             {
-                return Ok(result.Result.Token.JWT);
+                HttpContext.Response.Headers.TryAdd("Authorization", result.Token.JWT);
+                return NoContent();
             }
             else
             {
-                return BadRequest(result.Result.Message);
+                return BadRequest(result.Message);
             }
         }
         [AllowAnonymous]
@@ -104,20 +99,18 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
                 return BadRequest(result.Result.Message);
             }
         }
-        [Authorize]
+
+        //[Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _userService.GetAllAsyc();  // Asenkron operasyonu bekleyin
-
-            // Direkt olarak JSON serileştirmesi yapabilirsiniz
+            var result = await _userService.GetAllAsyc(); 
             var users = JsonConvert.DeserializeObject<List<UserResponseModele>>(result.ToString());
-
             var settings = new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
-
             var json = JsonConvert.SerializeObject(users, settings);
             return Ok(json);
         }

@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
 {
-    public class UserManager:IUserService
+    public class UserManager : IUserService
     {
         private readonly IUserDal _userDal;
         private readonly HttpContext _httpContext;
@@ -90,7 +90,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             {
                 resultModele.Message = ex.Message;
                 resultModele.Success = false;
-                
+
             }
             return resultModele;
         }
@@ -107,13 +107,13 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 else
                 {
                     _userDal.DeleteAsyc(user);
-                    resultModele.Success=true;
+                    resultModele.Success = true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                resultModele.Message ="Kullanıcı silinemedi"+  ex.Message;
-                resultModele.Success=false;
+                resultModele.Message = "Kullanıcı silinemedi" + ex.Message;
+                resultModele.Success = false;
             }
             return resultModele;
         }
@@ -135,7 +135,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 userResponseModele.SecretKey = item.Result.SecretKey;
                 userResponseModele.UserName = item.Result.UserName;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 userResponseModele = null;
             }
@@ -169,7 +169,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 }
                 return JsonConvert.SerializeObject(userResponseModeles);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return ex.Message;
             }
@@ -231,10 +231,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     resultModele.Success = true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                resultModele.Message = "HATA"+ ex.Message;
-                resultModele.Success = false;   
+                resultModele.Message = "HATA" + ex.Message;
+                resultModele.Success = false;
             }
             return resultModele;
         }
@@ -270,12 +270,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.Result.UserName;
                         userResponseModele.Password = User.Result.Password;
                         userResponseModele.RoleId = User.Result.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
-
-                        // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
-                        loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
-                        loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
-                        loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
+                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        loginResult.Token.JWT = loginResult.Token.JWT;
+                        loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
+                        loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
                     }
 
                 }
@@ -285,13 +283,13 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
 
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 loginResult.Token = null;
                 loginResult.Message = "HATA" + e.Message;
                 loginResult.Success = false;
             };
-            return  loginResult;
+            return loginResult;
         }
         public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest, HttpContext httpContext)
         {
@@ -326,12 +324,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.UserName;
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
-                        var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
-
-                        // Bu kısmı kontrol etmelisiniz. GenerateToken metodunun geri döndüğü LoginResult objesini nasıl işleyeceğinize bağlı olarak burayı düzenlemelisiniz.
-                        loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
-                        loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
-                        loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
+                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        loginResult.Token.JWT = loginResult.Token.JWT;
+                        loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
+                        loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
                     }
 
                 }
@@ -346,7 +342,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 loginResult.Message = "HATA" + e.Message;
                 loginResult.Success = false;
             };
-            return  loginResult;
+            return loginResult;
         }
         public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest, HttpContext httpContext)
         {
@@ -354,7 +350,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             try
             {
                 loginResult.Success = false;
-                loginResult.Message= "";
+                loginResult.Message = "";
                 loginResult.Token = null;
                 var User = await _userDal.GetAsyc(p => p.UserName == loginRequest.UserName);
                 if (User != null)
@@ -381,10 +377,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
                         userResponseModele.RoleId = User.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        var generateTokenResult = TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
-                        loginResult.Token.JWT = generateTokenResult.Result.Token.JWT;
-                        loginResult.Token.ValidMinute = generateTokenResult.Result.Token.ValidMinute;
-                        loginResult.Token.ValidityDatetime = generateTokenResult.Result.Token.ValidityDatetime;
+                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        loginResult.Token.JWT = loginResult.Token.JWT;
+                        loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
+                        loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
                     }
                 }
                 else
@@ -425,12 +421,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return JsonConvert.SerializeObject(userResponseModeles);
         }
-        public  async Task<ResultModele> ChangePassword(string OldPassword, string NewPassword, Guid UserId)
+        public async Task<ResultModele> ChangePassword(string OldPassword, string NewPassword, Guid UserId)
         {
             ResultModele resultModele = new ResultModele();
             resultModele.Message = "";
             resultModele.Success = false;
-            var user = await   _userDal.GetAsyc(p=>p.Id==UserId);
+            var user = await _userDal.GetAsyc(p => p.Id == UserId);
             if (user != null)
             {
                 if (VerifySHA256Hash(OldPassword, user.Password) == false)
@@ -440,7 +436,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 }
                 else
                 {
-                    User User=JsonConvert.DeserializeObject<User>(user.ToString());
+                    User User = JsonConvert.DeserializeObject<User>(user.ToString());
                     ValidationTool.Validate(new UserValidator(), user);
                     User.Password = ComputeSHA256Hash(User.Password);
                     _userDal.UpdateAsyc(User);
@@ -455,7 +451,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public async Task<LoginResult> Login(LoginRequest loginRequest,HttpContext httpContext)
+        public LoginResult Login(LoginRequest loginRequest, HttpContext httpContext)
         {
             var loginResult = new LoginResult();
             loginResult.Success = false;
@@ -464,7 +460,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
 
             try
             {
-                var user = await _userDal.GetAsyc(p => p.UserName.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.EMail.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.PhoneNumber.Equals(loginRequest.UserName, StringComparison.Ordinal));
+                var user = _userDal.Get(p => p.UserName.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.EMail.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.PhoneNumber.Equals(loginRequest.UserName, StringComparison.Ordinal));
                 if (user != null)
                 {
                     if (VerifySHA256Hash(loginRequest.Password, user.Password) == false)
@@ -488,11 +484,9 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = user.UserName;
                         userResponseModele.Password = user.Password;
                         userResponseModele.RoleId = user.RoleId;
-                        var generateTokenResult = new LoginResult(); // Yeni bir LoginResult nesnesi oluşturun.
-                        TokenProcess.GenerateToken(httpContext, userResponseModele, 25);
-                        loginResult.Token = generateTokenResult.Token;
-                        loginResult.Message = generateTokenResult.Message;
-                       
+                        var generateTokenResult = new LoginResult();
+                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+
                     }
                 }
                 else
