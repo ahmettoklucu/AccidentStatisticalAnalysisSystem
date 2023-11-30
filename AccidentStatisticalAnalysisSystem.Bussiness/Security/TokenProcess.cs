@@ -70,14 +70,14 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Security
         return tokenPayload;
     }
 
-        public static  void GenerateToken(HttpContext httpContext, ref LoginResult generateTokenResult,  UserResponseModele user, int ExpireMinute)
+        public static  void GenerateToken( ref LoginResult generateTokenResult,  UserResponseModele user, int ExpireMinute)
         {            
             generateTokenResult.Token = null;
             generateTokenResult.Success = false;
             generateTokenResult.Message = "";
             try
             {
-                if (user != null && httpContext != null)
+                if (user != null )
                 {
                     var claims = new List<Claim>
                     {

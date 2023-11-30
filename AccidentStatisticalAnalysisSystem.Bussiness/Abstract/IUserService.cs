@@ -23,10 +23,10 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
         Task<ResultModele> AddAsyc(User user);
         Task<ResultModele> UpdateAsyc(User user);
         Task<ResultModele> DeleteAsyc(User user);
-        LoginResult Login(LoginRequest loginRequest,HttpContext httpContext);
-        Task<LoginResult> EmailLogin(LoginRequest loginRequest, HttpContext httpContext);
-        Task<LoginResult> PhoneLogin(LoginRequest loginRequest, HttpContext httpContext);
-        Task<LoginResult> UserNameLogin( LoginRequest loginRequest, HttpContext httpContext);
+        LoginResult Login(LoginRequest loginRequest );
+        Task<LoginResult> EmailLogin(LoginRequest loginRequest);
+        Task<LoginResult> PhoneLogin(LoginRequest loginRequest);
+        Task<LoginResult> UserNameLogin( LoginRequest loginRequest);
         Task<ResultModele> ChangePassword(string OldPassword,string NewPassword,Guid UserId);
     }
 }

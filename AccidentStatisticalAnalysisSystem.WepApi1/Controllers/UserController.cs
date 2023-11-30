@@ -44,18 +44,15 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login(string UserName,string Password)
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            LoginRequest loginRequest = new LoginRequest();
-            loginRequest.UserName = UserName;
-            loginRequest.Password = Password;
-            
 
-            var result=  _userService.Login(loginRequest,HttpContext);
+            var result=  _userService.Login(loginRequest);
             if (result.Success==true)
             {
+                var responseData = new { Token = result.Token.JWT, result.Token.RoleId };
                 HttpContext.Response.Headers.TryAdd("Authorization", result.Token.JWT);
-                return NoContent();
+                return Ok(responseData);
             }
             else
             {
@@ -70,10 +67,9 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             loginRequest.UserName = UserName;
             loginRequest.Password = Password;
 
-            var result = _userService.PhoneLogin(loginRequest, HttpContext);
+            var result = _userService.PhoneLogin(loginRequest);
             if (result.Result.Success == true)
             {
-                
                 return Ok(new  {Token= result.Result.Token.JWT });
             }
             else
@@ -88,7 +84,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             var loginRequest = new LoginRequest();
             loginRequest.UserName = UserName;
             loginRequest.Password = password;
-            var result = _userService.UserNameLogin(loginRequest,HttpContext);
+            var result = _userService.UserNameLogin(loginRequest);
             if (result.Result.Success == true)
             {
                 
@@ -99,7 +95,6 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
                 return BadRequest(result.Result.Message);
             }
         }
-
         //[Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpGet]
@@ -114,6 +109,5 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             var json = JsonConvert.SerializeObject(users, settings);
             return Ok(json);
         }
-
     }
 }

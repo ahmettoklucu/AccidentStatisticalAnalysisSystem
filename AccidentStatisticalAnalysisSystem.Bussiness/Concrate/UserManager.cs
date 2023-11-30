@@ -238,7 +238,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public async Task<LoginResult> EmailLogin(LoginRequest loginRequest, HttpContext httpContext)
+        public async Task<LoginResult> EmailLogin(LoginRequest loginRequest )
         {
             var loginResult = new LoginResult();
             try
@@ -270,7 +270,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.Result.UserName;
                         userResponseModele.Password = User.Result.Password;
                         userResponseModele.RoleId = User.Result.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
                         loginResult.Token.JWT = loginResult.Token.JWT;
                         loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
                         loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
@@ -291,7 +291,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             };
             return loginResult;
         }
-        public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest, HttpContext httpContext)
+        public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest )
         {
             var loginResult = new LoginResult();
             try
@@ -324,7 +324,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.UserName = User.UserName;
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
-                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
                         loginResult.Token.JWT = loginResult.Token.JWT;
                         loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
                         loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
@@ -344,7 +344,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             };
             return loginResult;
         }
-        public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest, HttpContext httpContext)
+        public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest )
         {
             var loginResult = new LoginResult();
             try
@@ -377,7 +377,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = User.Password;
                         userResponseModele.RoleId = User.RoleId;
                         userResponseModele.RoleId = User.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
                         loginResult.Token.JWT = loginResult.Token.JWT;
                         loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
                         loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
@@ -451,7 +451,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public LoginResult Login(LoginRequest loginRequest, HttpContext httpContext)
+        public LoginResult Login(LoginRequest loginRequest)
         {
             var loginResult = new LoginResult();
             loginResult.Success = false;
@@ -485,7 +485,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = user.Password;
                         userResponseModele.RoleId = user.RoleId;
                         var generateTokenResult = new LoginResult();
-                        TokenProcess.GenerateToken(httpContext, ref loginResult, userResponseModele, 25);
+                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
 
                     }
                 }
