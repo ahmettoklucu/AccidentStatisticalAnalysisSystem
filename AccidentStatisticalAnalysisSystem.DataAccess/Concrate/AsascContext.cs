@@ -1,4 +1,5 @@
-﻿using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.Mapping;
+﻿
+using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.Mapping;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using System;

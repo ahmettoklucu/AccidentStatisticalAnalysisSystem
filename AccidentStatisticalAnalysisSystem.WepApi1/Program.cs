@@ -6,6 +6,11 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
+using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
+using AccidentStatisticalAnalysisSystem.Bussiness.Abstract;
+using AccidentStatisticalAnalysisSystem.DataAccess.Abstract.IRepository;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate;
+using AccidentStatisticalAnalysisSystem.DataAccess.Abstract;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<AsascContext>();
+builder.Services.AddScoped<IUserQueryable, EfUserQueryable>();
+builder.Services.AddScoped<IRoleQueryable, EfRoleQueryable>();
+builder.Services.AddScoped<IUserService, UserManager>();
+builder.Services.AddScoped<IUserDal, EfUserDal>();
 
-var key = Encoding.ASCII.GetBytes("9BEF3695-8687-42B9-B473-A9BDD260984E");
+var key = Encoding.UTF8.GetBytes("9BEF3695868742B9B473A9BDD260984EJSAKDH15475349DASKL");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -29,7 +39,8 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
         ValidateAudience = false,
-        ValidateLifetime = true
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
     };
 })
 .AddCookie("Cookies");
@@ -49,5 +60,4 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 app.Run();

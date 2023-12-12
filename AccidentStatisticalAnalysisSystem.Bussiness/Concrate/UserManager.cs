@@ -6,15 +6,22 @@ using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.Bussiness.Utilities;
 using AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentValidation;
 using AccidentStatisticalAnalysisSystem.DataAccess.Abstract;
+using AccidentStatisticalAnalysisSystem.DataAccess.Abstract.IRepository;
+using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
+using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,12 +30,20 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
     public class UserManager : IUserService
     {
         private readonly IUserDal _userDal;
-        private readonly HttpContext _httpContext;
+        private readonly IUserQueryable _userEntity;
+        private readonly IRoleQueryable _roleEntity;
 
-        public UserManager(IUserDal userDal)
+        public UserManager(IUserDal userDal, IUserQueryable userEntity,
+       IRoleQueryable roleEntity)
         {
+
             _userDal = userDal;
+            _userEntity = userEntity;
+            _roleEntity = roleEntity;
         }
+
+
+
         private string ComputeSHA256Hash(string rawData)
         {
             using (SHA256 sha256Hash = SHA256.Create())
@@ -57,30 +72,39 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 return false;
             }
         }
-        public async Task<ResultModele> AddAsyc(User user)
+        public async Task<ResultModele> AddAsyc(UserResponseModele userResponseModele)
         {
             ResultModele resultModele = new ResultModele();
             resultModele.Success = false;
             resultModele.Message = "";
             try
             {
-                var UserName = _userDal.GetAsyc(p => p.UserName == user.UserName);
+                var UserName = _userDal.GetAsyc(p => p.UserName == userResponseModele.UserName);
                 if (UserName.Result != null)
                 {
                     resultModele.Message = "Kullanıcı adi sistemde kayıtlıdır.";
                 }
-                else if (_userDal.GetAsyc(p => p.PhoneNumber == user.PhoneNumber).Result != null)
+                else if (_userDal.GetAsyc(p => p.PhoneNumber == userResponseModele.PhoneNumber).Result != null)
                 {
                     resultModele.Message = "Telefon numarası sistemde kayıtlıdır.";
                 }
-                else if (_userDal.GetAsyc(p => p.EMail == user.EMail).Result != null)
+                else if (_userDal.GetAsyc(p => p.EMail == userResponseModele.EMail).Result != null)
                 {
                     resultModele.Message = "EMail sistemde kayıtlıdır.";
                 }
                 else
                 {
+                    User user = new User
+                    {
+                        Name = userResponseModele.Name,
+                        SureName = userResponseModele.SureName,
+                        Password = userResponseModele.Password,
+                        PhoneNumber = userResponseModele.PhoneNumber,
+                        EMail = userResponseModele.EMail,
+                        UserName = userResponseModele.UserName
+                    };
                     ValidationTool.Validate(new UserValidator(), user);
-                    user.Password = ComputeSHA256Hash(user.Password);
+                    userResponseModele.Password = ComputeSHA256Hash(user.Password);
                     _userDal.AddAsyc(user);
                     resultModele.Message = "Kayıt işlemi başarili";
                     resultModele.Success = true;
@@ -142,36 +166,29 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             return userResponseModele;
 
         }
-        public async Task<string> GetAllAsyc()
+        public async Task<List<GetAllUserResponse>> GetAllAsyc()
         {
-            List<UserResponseModele> userResponseModeles = new List<UserResponseModele>();
             try
             {
-                var Users = await _userDal.GetAllAsyc();
-                List<User> users = JsonConvert.DeserializeObject<List<User>>(JsonConvert.SerializeObject(Users));
-                foreach (var item in users)
-                {
-                    UserResponseModele userResponseModele = new UserResponseModele
-                    {
-                        Name = item.Name,
-                        PhoneNumber = item.PhoneNumber,
-                        SureName = item.SureName,
-                        RoleId = item.RoleId,
-                        EMail = item.EMail,
-                        Id = item.Id,
-                        IsDelete = item.IsDelete,
-                        StarDate = item.StarDate,
-                        Password = item.Password,
-                        SecretKey = item.SecretKey,
-                        UserName = item.UserName
-                    };
-                    userResponseModeles.Add(userResponseModele);
-                }
-                return JsonConvert.SerializeObject(userResponseModeles);
+               var  query =  (from User in _userEntity.Table
+                          join Role in _roleEntity.Table on User.RoleId equals Role.Id 
+                          select  new GetAllUserResponse
+                          {
+                              Role=Role.Name,
+                              Name=User.Name,
+                              SureName=User.SureName,
+                              UserName=User.UserName,
+                              PhoneNumber=User.PhoneNumber,
+                              EMail=User.EMail,
+                              IsDelete=User.IsDelete
+                          }).ToList();
+                return  query;
+
+
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return null;
             }
         }
         public async Task<string> GetUserByUserNameAsyc(string userName)
@@ -199,31 +216,39 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return JsonConvert.SerializeObject(userResponseModeles);
         }
-        public async Task<ResultModele> UpdateAsyc(User user)
+        public async Task<ResultModele> UpdateAsyc(UserResponseModele userResponseModele)
         {
             ResultModele resultModele = new ResultModele();
             try
             {
                 resultModele.Success = false;
                 resultModele.Message = "";
-                if (_userDal.GetAsyc(p => p.UserName == user.UserName && p.Id != user.Id) != null)
+                if (_userDal.GetAsyc(p => p.UserName == userResponseModele.UserName && p.Id != userResponseModele.Id) != null)
                 {
                     resultModele.Message = "Kullanıcı adi sistemde kayıtlıdır.";
                     resultModele.Success = false;
                 }
-                else if (_userDal.GetAsyc(p => p.PhoneNumber == user.EMail && p.Id != user.Id) != null)
+                else if (_userDal.GetAsyc(p => p.PhoneNumber == userResponseModele.EMail && p.Id != userResponseModele.Id) != null)
                 {
                     resultModele.Message = "Telefon numarası sistemde kayıtlıdır.";
                     resultModele.Success = false;
                 }
-                else if (_userDal.GetAsyc(p => p.EMail == user.EMail && p.Id != user.Id) != null)
+                else if (_userDal.GetAsyc(p => p.EMail == userResponseModele.EMail && p.Id != userResponseModele.Id) != null)
                 {
                     resultModele.Message = "EMail sistemde kayıtlıdır.";
                     resultModele.Success = false;
                 }
                 else
                 {
-
+                    User user = new User
+                    {
+                        Name = userResponseModele.Name,
+                        SureName = userResponseModele.SureName,
+                        Password = userResponseModele.Password,
+                        PhoneNumber = userResponseModele.PhoneNumber,
+                        EMail = userResponseModele.EMail,
+                        UserName = userResponseModele.UserName
+                    };
                     ValidationTool.Validate(new UserValidator(), user);
                     user.Password = ComputeSHA256Hash(user.Password);
                     _userDal.UpdateAsyc(user);
@@ -238,162 +263,151 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public async Task<LoginResult> EmailLogin(LoginRequest loginRequest )
+        public  LoginResult EmailLogin(LoginRequest loginRequest )
         {
             var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message = "";
+            loginResult.Token = null;
             try
             {
-                loginResult.Success = false;
-                loginResult.Message = "";
-                loginResult.Token = null;
-                var User = _userDal.GetAsyc(p => p.PhoneNumber == loginRequest.UserName);
-                if (User != null)
+                var user = _userDal.Get(p => p.EMail.Equals(loginRequest.UserName, StringComparison.Ordinal));
+                if (user != null)
                 {
-                    if (VerifySHA256Hash(loginRequest.Password, User.Result.Password) == false)
+                    if (VerifySHA256Hash(loginRequest.Password, user.Password) == false)
                     {
                         loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
-                        User = null;
+                        user = null;
                     }
                     else
                     {
-                        loginResult.Message = "Giriş başarili.";
+                        loginResult.Message = "Giriş başarılı.";
                         loginResult.Success = true;
                         UserResponseModele userResponseModele = new UserResponseModele();
-                        userResponseModele.Name = User.Result.Name;
-                        userResponseModele.SureName = User.Result.SureName;
-                        userResponseModele.PhoneNumber = User.Result.PhoneNumber;
-                        userResponseModele.EMail = User.Result.EMail;
-                        userResponseModele.Id = User.Result.Id;
-                        userResponseModele.IsDelete = User.Result.IsDelete;
-                        userResponseModele.StarDate = User.Result.StarDate;
-                        userResponseModele.SecretKey = User.Result.SecretKey;
-                        userResponseModele.UserName = User.Result.UserName;
-                        userResponseModele.Password = User.Result.Password;
-                        userResponseModele.RoleId = User.Result.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
-                        loginResult.Token.JWT = loginResult.Token.JWT;
-                        loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
-                        loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
-                    }
+                        userResponseModele.Name = user.Name;
+                        userResponseModele.SureName = user.SureName;
+                        userResponseModele.PhoneNumber = user.PhoneNumber;
+                        userResponseModele.EMail = user.EMail;
+                        userResponseModele.Id = user.Id;
+                        userResponseModele.IsDelete = user.IsDelete;
+                        userResponseModele.StarDate = user.StarDate;
+                        userResponseModele.SecretKey = user.SecretKey;
+                        userResponseModele.UserName = user.UserName;
+                        userResponseModele.Password = user.Password;
+                        userResponseModele.RoleId = user.RoleId;
+                        var generateTokenResult = new LoginResult();
+                        TokenProcess.GenerateToken(ref loginResult, userResponseModele, 25);
 
+                    }
                 }
                 else
                 {
-                    loginResult.Message = "Bu telefon sistemde bulunmamaktadir.";
-
+                    loginResult.Message = "Bu Kullanıcı sistemde bulunmamaktadır.";
                 }
             }
             catch (Exception e)
             {
-                loginResult.Token = null;
-                loginResult.Message = "HATA" + e.Message;
                 loginResult.Success = false;
-            };
+                loginResult.Message = "Hata sistem yöneticisi ile iletişime geçin.";
+            }
             return loginResult;
         }
-        public async Task<LoginResult> PhoneLogin(LoginRequest loginRequest )
+        public  LoginResult PhoneLogin(LoginRequest loginRequest )
         {
             var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message = "";
+            loginResult.Token = null;
             try
             {
-                loginResult.Success = false;
-                loginResult.Message = "";
-                loginResult.Token = null;
-                var User = await _userDal.GetAsyc(p => p.PhoneNumber == loginRequest.UserName);
-                if (User != null)
+                var user = _userDal.Get(p => p.PhoneNumber.Equals(loginRequest.UserName, StringComparison.Ordinal));
+                if (user != null)
                 {
-                    if (VerifySHA256Hash(loginRequest.Password, User.Password) == false)
+                    if (VerifySHA256Hash(loginRequest.Password, user.Password) == false)
                     {
                         loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
-                        User = null;
+                        user = null;
                     }
                     else
                     {
-                        loginResult.Message = "Giriş başarili.";
+                        loginResult.Message = "Giriş başarılı.";
                         loginResult.Success = true;
-
                         UserResponseModele userResponseModele = new UserResponseModele();
-                        userResponseModele.Name = User.Name;
-                        userResponseModele.SureName = User.SureName;
-                        userResponseModele.PhoneNumber = User.PhoneNumber;
-                        userResponseModele.EMail = User.EMail;
-                        userResponseModele.Id = User.Id;
-                        userResponseModele.IsDelete = User.IsDelete;
-                        userResponseModele.StarDate = User.StarDate;
-                        userResponseModele.SecretKey = User.SecretKey;
-                        userResponseModele.UserName = User.UserName;
-                        userResponseModele.Password = User.Password;
-                        userResponseModele.RoleId = User.RoleId;
-                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
-                        loginResult.Token.JWT = loginResult.Token.JWT;
-                        loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
-                        loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
-                    }
+                        userResponseModele.Name = user.Name;
+                        userResponseModele.SureName = user.SureName;
+                        userResponseModele.PhoneNumber = user.PhoneNumber;
+                        userResponseModele.EMail = user.EMail;
+                        userResponseModele.Id = user.Id;
+                        userResponseModele.IsDelete = user.IsDelete;
+                        userResponseModele.StarDate = user.StarDate;
+                        userResponseModele.SecretKey = user.SecretKey;
+                        userResponseModele.UserName = user.UserName;
+                        userResponseModele.Password = user.Password;
+                        userResponseModele.RoleId = user.RoleId;
+                        var generateTokenResult = new LoginResult();
+                        TokenProcess.GenerateToken(ref loginResult, userResponseModele, 25);
 
+                    }
                 }
                 else
                 {
-                    loginResult.Message = "Bu telefon sistemde bulunmamaktadir.";
+                    loginResult.Message = "Bu Kullanıcı sistemde bulunmamaktadır.";
                 }
             }
             catch (Exception e)
             {
-                loginResult.Token = null;
-                loginResult.Message = "HATA" + e.Message;
                 loginResult.Success = false;
-            };
+                loginResult.Message = "Hata sistem yöneticisi ile iletişime geçin.";
+            }
             return loginResult;
         }
-        public async Task<LoginResult> UserNameLogin(LoginRequest loginRequest )
+        public  LoginResult UserNameLogin(LoginRequest loginRequest )
         {
             var loginResult = new LoginResult();
+            loginResult.Success = false;
+            loginResult.Message = "";
+            loginResult.Token = null;
             try
             {
-                loginResult.Success = false;
-                loginResult.Message = "";
-                loginResult.Token = null;
-                var User = await _userDal.GetAsyc(p => p.UserName == loginRequest.UserName);
-                if (User != null)
+                var user = _userDal.Get(p => p.UserName.Equals(loginRequest.UserName, StringComparison.Ordinal));
+                if (user != null)
                 {
-                    if (VerifySHA256Hash(loginRequest.Password, User.Password) == false)
+                    if (VerifySHA256Hash(loginRequest.Password, user.Password) == false)
                     {
                         loginResult.Message = "Şifre hatalı tekrar deneyiniz.";
-                        User = null;
+                        user = null;
                     }
                     else
                     {
-                        loginResult.Message = "Giriş başarili.";
+                        loginResult.Message = "Giriş başarılı.";
                         loginResult.Success = true;
                         UserResponseModele userResponseModele = new UserResponseModele();
-                        userResponseModele.Name = User.Name;
-                        userResponseModele.SureName = User.SureName;
-                        userResponseModele.PhoneNumber = User.PhoneNumber;
-                        userResponseModele.EMail = User.EMail;
-                        userResponseModele.Id = User.Id;
-                        userResponseModele.IsDelete = User.IsDelete;
-                        userResponseModele.StarDate = User.StarDate;
-                        userResponseModele.SecretKey = User.SecretKey;
-                        userResponseModele.UserName = User.UserName;
-                        userResponseModele.Password = User.Password;
-                        userResponseModele.RoleId = User.RoleId;
-                        userResponseModele.RoleId = User.RoleId; // Yeni bir LoginResult nesnesi oluşturun.
-                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
-                        loginResult.Token.JWT = loginResult.Token.JWT;
-                        loginResult.Token.ValidMinute = loginResult.Token.ValidMinute;
-                        loginResult.Token.ValidityDatetime = loginResult.Token.ValidityDatetime;
+                        userResponseModele.Name = user.Name;
+                        userResponseModele.SureName = user.SureName;
+                        userResponseModele.PhoneNumber = user.PhoneNumber;
+                        userResponseModele.EMail = user.EMail;
+                        userResponseModele.Id = user.Id;
+                        userResponseModele.IsDelete = user.IsDelete;
+                        userResponseModele.StarDate = user.StarDate;
+                        userResponseModele.SecretKey = user.SecretKey;
+                        userResponseModele.UserName = user.UserName;
+                        userResponseModele.Password = user.Password;
+                        userResponseModele.RoleId = user.RoleId;
+                        var generateTokenResult = new LoginResult();
+                        TokenProcess.GenerateToken(ref loginResult, userResponseModele, 25);
+
                     }
                 }
                 else
                 {
-                    loginResult.Message = "Bu Kullanıcı ismi sistemde bulunmamaktadir.";
+                    loginResult.Message = "Bu Kullanıcı sistemde bulunmamaktadır.";
                 }
             }
             catch (Exception e)
             {
-                loginResult.Token = null;
-                loginResult.Message = "HATA" + e.Message;
                 loginResult.Success = false;
-            };
+                loginResult.Message = "Hata sistem yöneticisi ile iletişime geçin.";
+            }
             return loginResult;
         }
         public async Task<string> GetUserByEMailAsyc(string EMail)
@@ -421,12 +435,12 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return JsonConvert.SerializeObject(userResponseModeles);
         }
-        public async Task<ResultModele> ChangePassword(string OldPassword, string NewPassword, Guid UserId)
+        public  ResultModele ChangePassword(string OldPassword, string NewPassword, Guid UserId)
         {
             ResultModele resultModele = new ResultModele();
             resultModele.Message = "";
             resultModele.Success = false;
-            var user = await _userDal.GetAsyc(p => p.Id == UserId);
+            var user =  _userDal.Get(p => p.Id == UserId);
             if (user != null)
             {
                 if (VerifySHA256Hash(OldPassword, user.Password) == false)
@@ -460,7 +474,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
 
             try
             {
-                var user = _userDal.Get(p => p.UserName.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.EMail.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.PhoneNumber.Equals(loginRequest.UserName, StringComparison.Ordinal));
+                var user =  _userDal.Get(p => p.UserName.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.EMail.Equals(loginRequest.UserName, StringComparison.Ordinal) || p.PhoneNumber.Equals(loginRequest.UserName, StringComparison.Ordinal));
                 if (user != null)
                 {
                     if (VerifySHA256Hash(loginRequest.Password, user.Password) == false)
@@ -485,7 +499,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                         userResponseModele.Password = user.Password;
                         userResponseModele.RoleId = user.RoleId;
                         var generateTokenResult = new LoginResult();
-                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 25);
+                        TokenProcess.GenerateToken( ref loginResult, userResponseModele, 20);
 
                     }
                 }
@@ -499,7 +513,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 loginResult.Success = false;
                 loginResult.Message = "Hata sistem yöneticisi ile iletişime geçin.";
             }
-            return loginResult;
+            return  loginResult;
         }
         public async Task<string> GetUserByPhoneAsyc(string Phone)
         {
@@ -525,6 +539,46 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 userResponseModeles.Add(userResponseModele);
             }
             return JsonConvert.SerializeObject(userResponseModeles);
+        }
+        public bool TokenRenewal(string Token ,ref LoginResult loginResult)
+        {
+            loginResult.Token = new Token();
+            loginResult.Success = false;
+            loginResult.Message = "";
+           
+            
+            bool result=false;
+            var success = TokenProcess.ValidateToken(Token);
+            if (success == true)
+            {
+                
+                var claim = TokenProcess.DecodeToken(Token);
+                var item = _userDal.Get(p => p.EMail == claim.EMail && p.UserName == claim.UserName&&p.PhoneNumber==p.PhoneNumber);
+                UserResponseModele userResponseModele = new UserResponseModele
+                {
+                    Name = item.Name,
+                    PhoneNumber = item.PhoneNumber,
+                    SureName = item.SureName,
+                    RoleId = item.RoleId,
+                    EMail = item.EMail,
+                    Id = item.Id,
+                    IsDelete = item.IsDelete,
+                    StarDate = item.StarDate,
+                    Password = item.Password,
+                    SecretKey = item.SecretKey,
+                    UserName = item.UserName
+                };
+               
+                TokenProcess.GenerateToken(ref loginResult, userResponseModele, 20);
+                result = true;
+
+            }
+            else
+            {
+                result = false;
+            }
+            return result;
+
         }
     }
 }

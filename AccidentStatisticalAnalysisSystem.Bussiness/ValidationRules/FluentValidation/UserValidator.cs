@@ -19,7 +19,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentVali
             RuleFor(p => p.Password).NotEmpty().WithMessage("Şifre boş geçilemez.");
 
             RuleFor(p => p.PhoneNumber).Must(NumericControl).WithMessage("Telefon numarasi sayilardan oluşmalıdır.");
-            RuleFor(p => p.Password).Must(PasswordControl).WithMessage("Şifre büyük harf,küçük harf,sayi ve özel karakter içermelidir.");
+            RuleFor(p => p.Password).Must(PasswordControl).WithMessage("Şifre büyük harf,küçük harf,sayi ve özel karakter içermeli ve 8 karakter olmalıdır.");
             RuleFor(p => p.EMail).EmailAddress().WithMessage("EMail adresi email formatına uymamaktadır.");
 
 

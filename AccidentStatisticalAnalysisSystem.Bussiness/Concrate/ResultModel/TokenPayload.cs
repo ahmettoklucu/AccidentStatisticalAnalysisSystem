@@ -14,5 +14,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResultModel
         public string PhoneNumber { get; set; }
         public string UserName { get; set; }
         public DateTime ValidityDatetime { get; set; }
+        public bool Success { get; set; }
     }
 }

@@ -2,7 +2,10 @@
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.RequestModel;
 using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel;
+using AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResultModel;
+using AccidentStatisticalAnalysisSystem.Bussiness.Security;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
+using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,22 +20,15 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController()
+        public UserController(IUserService userService)
         {
-            _userService = new UserManager(new EfUserDal());
+            _userService = userService;
         }
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(UserResponseModele userResponseModele)
         {
-            User user=new User();
-            user.Name = userResponseModele.Name;
-            user.SureName = userResponseModele.SureName;
-            user.Password = userResponseModele.Password;
-            user.PhoneNumber = userResponseModele.PhoneNumber;
-            user.EMail = userResponseModele.EMail; 
-            user.UserName = userResponseModele.UserName;
-            var addedProduct = await  _userService.AddAsyc(user);
+            var addedProduct = await  _userService.AddAsyc(userResponseModele);
             if (addedProduct.Success==true)
             {
                 return Ok(addedProduct.Message);
@@ -47,9 +43,10 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
 
-            var result=  _userService.Login(loginRequest);
+            var result= _userService.Login(loginRequest);
             if (result.Success==true)
             {
+                LoginResult loginResult = new LoginResult();
                 var responseData = new { Token = result.Token.JWT, result.Token.RoleId };
                 HttpContext.Response.Headers.TryAdd("Authorization", result.Token.JWT);
                 return Ok(responseData);
@@ -61,53 +58,70 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> PhoneLogin(string UserName, string Password)
+        public async Task<IActionResult> PhoneLogin(LoginRequest loginRequest)
         {
-            LoginRequest loginRequest = new LoginRequest();
-            loginRequest.UserName = UserName;
-            loginRequest.Password = Password;
+           
 
             var result = _userService.PhoneLogin(loginRequest);
-            if (result.Result.Success == true)
+            if (result.Success == true)
             {
-                return Ok(new  {Token= result.Result.Token.JWT });
+                return Ok(new  {Token= result.Token.JWT });
             }
             else
             {
-                return BadRequest(result.Result.Message);
+                return BadRequest(result.Message);
             }
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> UserNameLogin(string UserName, string password)
+        public async Task<IActionResult> UserNameLogin(LoginRequest loginRequest)
         {
-            var loginRequest = new LoginRequest();
-            loginRequest.UserName = UserName;
-            loginRequest.Password = password;
+
             var result = _userService.UserNameLogin(loginRequest);
-            if (result.Result.Success == true)
+            if (result.Success == true)
             {
                 
-                return Ok(result.Result.Token.JWT);
+                return Ok(result.Token.JWT);
             }
             else
             {
-                return BadRequest(result.Result.Message);
+                return BadRequest(result.Message);
             }
         }
-        //[Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpPost]
+        public async  Task<IActionResult> RenavalToken([FromBody] TokenRequestModele token)
+        {
+            var loginResult = new LoginResult
+            {
+                Success = false,
+                Message = "",
+                Token = new Token()
+            };
+            try
+            {
+                var result = _userService.TokenRenewal(token.Token, ref loginResult);
+                if (result == true)
+                {
+                    var responseData = new { Token = loginResult.Token.JWT};
+                    HttpContext.Response.Headers.TryAdd("Authorization", loginResult.Token.JWT);
+                    return Ok(loginResult.Token.JWT);
+                }
+            }
+            catch(Exception ex)
+            {
+                loginResult.Message = ex.Message;
+            }
+            return BadRequest(loginResult.Message);
+        }
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _userService.GetAllAsyc(); 
-            var users = JsonConvert.DeserializeObject<List<UserResponseModele>>(result.ToString());
-            var settings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-            };
-            var json = JsonConvert.SerializeObject(users, settings);
-            return Ok(json);
+
+            var result = await _userService.GetAllAsyc();
+            return Ok(result);
+
         }
     }
 }
