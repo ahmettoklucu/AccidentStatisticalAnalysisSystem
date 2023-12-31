@@ -90,7 +90,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
         }
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
-        public async  Task<IActionResult> RenavalToken([FromBody] TokenRequestModele token)
+        public async  Task<IActionResult> RenavalToken([FromBody] TokenRequestModele tokenRequest)
         {
             var loginResult = new LoginResult
             {
@@ -100,7 +100,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             };
             try
             {
-                var result = _userService.TokenRenewal(token.Token, ref loginResult);
+                var result = _userService.TokenRenewal(tokenRequest.Token, ref loginResult);
                 if (result == true)
                 {
                     var responseData = new { Token = loginResult.Token.JWT};
@@ -114,7 +114,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             }
             return BadRequest(loginResult.Message);
         }
-        [AllowAnonymous]
+        [Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

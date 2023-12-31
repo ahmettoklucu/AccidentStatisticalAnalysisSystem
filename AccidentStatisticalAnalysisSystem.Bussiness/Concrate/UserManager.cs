@@ -174,6 +174,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                           join Role in _roleEntity.Table on User.RoleId equals Role.Id 
                           select  new GetAllUserResponse
                           {
+                              Id=User.Id,
                               Role=Role.Name,
                               Name=User.Name,
                               SureName=User.SureName,

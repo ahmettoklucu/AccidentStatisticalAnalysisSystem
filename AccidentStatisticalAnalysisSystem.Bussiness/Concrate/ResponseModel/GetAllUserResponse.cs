@@ -9,6 +9,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate.ResponseModel
 {
     public class GetAllUserResponse
     {
+        public Guid Id { get; set; }
         public string Role { get; set; }
         public string Name { get; set; }
         public string SureName { get; set; }
