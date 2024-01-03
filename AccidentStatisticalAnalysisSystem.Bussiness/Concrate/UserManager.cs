@@ -118,8 +118,9 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             }
             return resultModele;
         }
-        public async Task<ResultModele> DeleteAsyc(User user)
+        public async Task<ResultModele> DeleteAsyc(Guid UserId)
         {
+            var user= _userDal.Get(p => p.Id == UserId);
             ResultModele resultModele = new ResultModele();
             try
             {
@@ -131,6 +132,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 else
                 {
                     _userDal.DeleteAsyc(user);
+                    resultModele.Message = "Kullanıcı silindi.";
                     resultModele.Success = true;
                 }
             }
@@ -139,7 +141,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                 resultModele.Message = "Kullanıcı silinemedi" + ex.Message;
                 resultModele.Success = false;
             }
-            return resultModele;
+            return  resultModele;
         }
         public async Task<UserResponseModele> GetAsyc(Guid UserId)
         {
@@ -224,17 +226,18 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             {
                 resultModele.Success = false;
                 resultModele.Message = "";
-                if (_userDal.GetAsyc(p => p.UserName == userResponseModele.UserName && p.Id != userResponseModele.Id) != null)
+                if (_userDal.Get(p => p.UserName == userResponseModele.UserName && p.Id != userResponseModele.Id) != null)
                 {
                     resultModele.Message = "Kullanıcı adi sistemde kayıtlıdır.";
                     resultModele.Success = false;
                 }
-                else if (_userDal.GetAsyc(p => p.PhoneNumber == userResponseModele.EMail && p.Id != userResponseModele.Id) != null)
+
+                else    if (_userDal.Get(p => p.PhoneNumber == userResponseModele.EMail && p.Id != userResponseModele.Id) != null)
                 {
                     resultModele.Message = "Telefon numarası sistemde kayıtlıdır.";
                     resultModele.Success = false;
                 }
-                else if (_userDal.GetAsyc(p => p.EMail == userResponseModele.EMail && p.Id != userResponseModele.Id) != null)
+                else if (_userDal.Get(p => p.EMail == userResponseModele.EMail && p.Id != userResponseModele.Id) != null)
                 {
                     resultModele.Message = "EMail sistemde kayıtlıdır.";
                     resultModele.Success = false;
@@ -253,7 +256,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
                     ValidationTool.Validate(new UserValidator(), user);
                     user.Password = ComputeSHA256Hash(user.Password);
                     _userDal.UpdateAsyc(user);
-                    resultModele.Message = "Kullanıcı ekleme işlemi başarili";
+                    resultModele.Message = "Kullanıcı güncelleştirme işlemi başarili";
                     resultModele.Success = true;
                 }
             }
@@ -581,5 +584,6 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Concrate
             return result;
 
         }
+         
     }
 }

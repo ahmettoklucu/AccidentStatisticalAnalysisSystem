@@ -21,7 +21,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.Abstract
         Task<UserResponseModele> GetAsyc(Guid UserId);
         Task<ResultModele> AddAsyc(UserResponseModele userResponseModele);
         Task<ResultModele> UpdateAsyc(UserResponseModele userResponseModele);
-        Task<ResultModele> DeleteAsyc(User user);
+        Task<ResultModele> DeleteAsyc(Guid UserId);
         LoginResult Login(LoginRequest loginRequest );
         LoginResult EmailLogin(LoginRequest loginRequest);
         LoginResult PhoneLogin(LoginRequest loginRequest);

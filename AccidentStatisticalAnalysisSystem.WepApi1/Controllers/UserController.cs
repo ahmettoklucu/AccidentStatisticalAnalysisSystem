@@ -114,13 +114,51 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             }
             return BadRequest(loginResult.Message);
         }
-        [Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
+        //[Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
 
             var result = await _userService.GetAllAsyc();
             return Ok(result);
+
+        }
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "1")]
+        [HttpGet]
+        public async Task<IActionResult> Get(Guid guid)
+        {
+
+            var result = await _userService.GetAsyc(guid);
+            return Ok(result);
+        }
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "1")]
+        [HttpPost]
+        public async Task<IActionResult> Update(UserResponseModele userResponseModele)
+        {
+            var UpdateUser = await _userService.UpdateAsyc(userResponseModele);
+            if (UpdateUser.Success == true)
+            {
+                return Ok(UpdateUser.Message);
+            }
+            else
+            {
+                return BadRequest(UpdateUser.Message);
+            }
+
+        }
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "1")]
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid userId)
+        {
+            var DeleteUser = await _userService.DeleteAsyc(userId);
+            if (DeleteUser.Success == true)
+            {
+                return Ok(DeleteUser.Message);
+            }
+            else
+            {
+                return BadRequest(DeleteUser.Message);
+            }
 
         }
     }
