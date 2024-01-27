@@ -13,7 +13,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
 {
     public class AsascContext : DbContext
     {
-        public AsascContext() 
+        public AsascContext() : base("Name=AsascContext")
         {
             Database.SetInitializer<AsascContext>(null);
         }

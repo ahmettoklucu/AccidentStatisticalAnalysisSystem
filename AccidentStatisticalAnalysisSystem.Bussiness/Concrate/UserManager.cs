@@ -10,7 +10,6 @@ using AccidentStatisticalAnalysisSystem.DataAccess.Abstract.IRepository;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
