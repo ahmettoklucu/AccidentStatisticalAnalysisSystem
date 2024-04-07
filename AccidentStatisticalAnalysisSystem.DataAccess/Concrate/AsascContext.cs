@@ -2,20 +2,15 @@
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.Mapping;
 using AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping;
 using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
 {
     public class AsascContext : DbContext
     {
-        public AsascContext() : base("Name=AsascContext")
+        public AsascContext(DbContextOptions<AsascContext> options) : base(options)
         {
-            Database.SetInitializer<AsascContext>(null);
         }
         public DbSet<City> Cities { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -50,43 +45,43 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
         public DbSet<RootCategory2> RootCategory2s { get; set; }
         public DbSet<RootCategory3> RootCategory3s { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Configurations.Add(new CityMap());
-            modelBuilder.Configurations.Add(new DangerousMaterialIncidentsMap());
-            modelBuilder.Configurations.Add(new EnvironmentalDamageIncidentsMap());
-            modelBuilder.Configurations.Add(new FinanceIncidentMap());
-            modelBuilder.Configurations.Add(new FormOfTheChemicalIncidentMap());
-            modelBuilder.Configurations.Add(new IgnitionIncidentMap());
-            modelBuilder.Configurations.Add(new IncidentMap());
-            modelBuilder.Configurations.Add(new IncidentTypeIncidentMap());
-            modelBuilder.Configurations.Add(new ProcesIncidentMap());
-            modelBuilder.Configurations.Add(new ProcesMap());
-            modelBuilder.Configurations.Add(new RoleMap());
-            modelBuilder.Configurations.Add(new RootIncidentMap());
-            modelBuilder.Configurations.Add(new RootMap());
-            modelBuilder.Configurations.Add(new SuggestionMap());
-            modelBuilder.Configurations.Add(new UserMap());
-            modelBuilder.Configurations.Add(new DangerousMaterialMap());
-            modelBuilder.Configurations.Add(new EmployerTypeMap());
-            modelBuilder.Configurations.Add(new EnvironmentalDamageCategoryMap());
-            modelBuilder.Configurations.Add(new EnvironmentalDamageMap());
-            modelBuilder.Configurations.Add(new FinanceMap());
-            modelBuilder.Configurations.Add(new FormOfChemicalMap());
-            modelBuilder.Configurations.Add(new IgnıtıonMap());
-            modelBuilder.Configurations.Add(new IncidentTypeMap());
-            modelBuilder.Configurations.Add(new IncidentTypeCategoryMap());
-            modelBuilder.Configurations.Add(new NaceMap());
-            modelBuilder.Configurations.Add(new NotificationMap());
-            modelBuilder.Configurations.Add(new OperatingModeMap());
-            modelBuilder.Configurations.Add(new ProcessCategory1Map());
-            modelBuilder.Configurations.Add(new ProcessCategory2Map());
-            modelBuilder.Configurations.Add(new ProcessCategory3Map());
-            modelBuilder.Configurations.Add(new RootCategory1Map());
-            modelBuilder.Configurations.Add(new RootCategory2Map());
-            modelBuilder.Configurations.Add(new RootCategory3Map());
-            modelBuilder.Configurations.Add(new CompanyMap());
-            modelBuilder.Configurations.Add(new CompanyTypeMap());
+            modelBuilder.ApplyConfiguration(new CityMap());
+            modelBuilder.ApplyConfiguration(new DangerousMaterialIncidentsMap());
+            modelBuilder.ApplyConfiguration(new EnvironmentalDamageIncidentsMap());
+            modelBuilder.ApplyConfiguration(new FinanceIncidentMap());
+            modelBuilder.ApplyConfiguration(new FormOfTheChemicalIncidentMap());
+            modelBuilder.ApplyConfiguration(new IgnitionIncidentMap());
+            modelBuilder.ApplyConfiguration(new IncidentMap());
+            modelBuilder.ApplyConfiguration(new IncidentTypeIncidentMap());
+            modelBuilder.ApplyConfiguration(new ProcesIncidentMap());
+            modelBuilder.ApplyConfiguration(new ProcesMap());
+            modelBuilder.ApplyConfiguration(new RoleMap());
+            modelBuilder.ApplyConfiguration(new RootIncidentMap());
+            modelBuilder.ApplyConfiguration(new RootMap());
+            modelBuilder.ApplyConfiguration(new SuggestionMap());
+            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new DangerousMaterialMap());
+            modelBuilder.ApplyConfiguration(new EmployerTypeMap());
+            modelBuilder.ApplyConfiguration(new EnvironmentalDamageCategoryMap());
+            modelBuilder.ApplyConfiguration(new EnvironmentalDamageMap());
+            modelBuilder.ApplyConfiguration(new FinanceMap());
+            modelBuilder.ApplyConfiguration(new FormOfChemicalMap());
+            modelBuilder.ApplyConfiguration(new IgnitionMap());
+            modelBuilder.ApplyConfiguration(new IncidentTypeMap());
+            modelBuilder.ApplyConfiguration(new IncidentTypeCategoryMap());
+            modelBuilder.ApplyConfiguration(new NaceMap());
+            modelBuilder.ApplyConfiguration(new NotificationMap());
+            modelBuilder.ApplyConfiguration(new OperatingModeMap());
+            modelBuilder.ApplyConfiguration(new ProcessCategory1Map());
+            modelBuilder.ApplyConfiguration(new ProcessCategory2Map());
+            modelBuilder.ApplyConfiguration(new ProcessCategory3Map());
+            modelBuilder.ApplyConfiguration(new RootCategory1Map());
+            modelBuilder.ApplyConfiguration(new RootCategory2Map());
+            modelBuilder.ApplyConfiguration(new RootCategory3Map());
+            modelBuilder.ApplyConfiguration(new CompanyMap());
+            modelBuilder.ApplyConfiguration(new CompanyTypeMap());
         }
     }
 }

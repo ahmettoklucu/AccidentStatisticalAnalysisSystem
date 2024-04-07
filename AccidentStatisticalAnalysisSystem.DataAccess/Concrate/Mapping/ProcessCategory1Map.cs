@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,14 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class ProcessCategory1Map:EntityTypeConfiguration<ProcesCategory1>
+    public class ProcessCategory1Map : IEntityTypeConfiguration<ProcesCategory1>
     {
-        public ProcessCategory1Map()
+        public void Configure(EntityTypeBuilder<ProcesCategory1> builder)
         {
-            ToTable(@"ProcesCategory1", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
-
+            builder.ToTable("ProcesCategory1", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
         }
     }
 }

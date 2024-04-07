@@ -1,4 +1,6 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
@@ -8,23 +10,25 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class ProcesIncidentMap:EntityTypeConfiguration<ProcesIncident>
+    public class ProcesIncidentMap : IEntityTypeConfiguration<ProcesIncident>
     {
-        public ProcesIncidentMap()
+        public void Configure(EntityTypeBuilder<ProcesIncident> builder)
         {
-            ToTable(@"ProcesIncidents", "dbo");
-            HasKey(x => new { x.IncidentId, x.ProcesId});
-            Property(x => x.IncidentId).HasColumnName("IncidentId");
-            Property(x => x.ProcesId).HasColumnName("ProcesId");
-            Property(x => x.Value).HasColumnName("Value");
-            HasRequired(x => x.Incident)
-             .WithMany(x => x.ProcesIncident)
-             .HasForeignKey(x => x.IncidentId)
-             .WillCascadeOnDelete(false);
-            HasRequired(x => x.Proces)
-               .WithMany(x => x.ProcesIncident)
-               .HasForeignKey(x => x.ProcesId)
-               .WillCascadeOnDelete(false);
+            builder.ToTable("ProcesIncidents", "dbo");
+            builder.HasKey(x => new { x.IncidentId, x.ProcesId });
+            builder.Property(x => x.IncidentId).HasColumnName("IncidentId");
+            builder.Property(x => x.ProcesId).HasColumnName("ProcesId");
+            builder.Property(x => x.Value).HasColumnName("Value");
+
+            builder.HasOne(x => x.Incident)
+                   .WithMany(x => x.ProcesIncident)
+                   .HasForeignKey(x => x.IncidentId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.Proces)
+                   .WithMany(x => x.ProcesIncident)
+                   .HasForeignKey(x => x.ProcesId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

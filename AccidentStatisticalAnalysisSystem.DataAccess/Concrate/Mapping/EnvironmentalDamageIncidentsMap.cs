@@ -1,23 +1,19 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
-{ 
-    public class EnvironmentalDamageIncidentsMap:EntityTypeConfiguration<EnvironmentalDamageIncident>
+{
+    public class EnvironmentalDamageIncidentsMap : IEntityTypeConfiguration<EnvironmentalDamageIncident>
     {
-        public EnvironmentalDamageIncidentsMap()
+        public void Configure(EntityTypeBuilder<EnvironmentalDamageIncident> builder)
         {
-            ToTable(@"EnvironmentalDamageIncidents","dbo");
-            HasKey(x => new { x.IncidentId, x.EnvironmentalDamageId });
-            Property(x => x.IncidentId).HasColumnName("IncidentId");
-            Property(x => x.EnvironmentalDamageId).HasColumnName("EnvironmentalDamageId");
-            Property(x=>x.Value).HasColumnName("Value");
+            builder.ToTable("EnvironmentalDamageIncidents", "dbo");
+            builder.HasKey(x => new { x.IncidentId, x.EnvironmentalDamageId });
+            builder.Property(x => x.IncidentId).HasColumnName("IncidentId");
+            builder.Property(x => x.EnvironmentalDamageId).HasColumnName("EnvironmentalDamageId");
+            builder.Property(x => x.Value).HasColumnName("Value");
         }
-
     }
 }

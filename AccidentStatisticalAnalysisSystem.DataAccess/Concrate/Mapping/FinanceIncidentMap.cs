@@ -1,33 +1,29 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class FinanceIncidentMap:EntityTypeConfiguration<FinanceIncident>
+    public class FinanceIncidentMap : IEntityTypeConfiguration<FinanceIncident>
     {
-        public FinanceIncidentMap()
+        public void Configure(EntityTypeBuilder<FinanceIncident> builder)
         {
-            ToTable(@"FinanceIncidents","dbo");
-            HasKey(x => new { x.IncidentId, x.FinaceId });
-            Property(x => x.IncidentId).HasColumnName("IncidentId");
-            Property(x => x.FinaceId).HasColumnName("FinaceId");
-            Property(x=>x.Value).HasColumnName("Value");
+            builder.ToTable("FinanceIncidents", "dbo");
+            builder.HasKey(x => new { x.IncidentId, x.FinaceId });
+            builder.Property(x => x.IncidentId).HasColumnName("IncidentId");
+            builder.Property(x => x.FinaceId).HasColumnName("FinaceId");
+            builder.Property(x => x.Value).HasColumnName("Value");
 
+            builder.HasOne(x => x.Incident)
+                .WithMany(x => x.FinanceIncidents)
+                .HasForeignKey(x => x.IncidentId)
+                .OnDelete(DeleteBehavior.Restrict); // Ya da Cascade, SetNull, vs. olabilir
 
-            HasRequired(x => x.Incident)
-               .WithMany(x => x.FinanceIncidents)
-               .HasForeignKey(x => x.IncidentId)
-               .WillCascadeOnDelete(false);
-            HasRequired(x => x.Finance)
+            builder.HasOne(x => x.Finance)
                 .WithMany(x => x.FinanceIncidents)
                 .HasForeignKey(x => x.FinaceId)
-                .WillCascadeOnDelete(false);
-
+                .OnDelete(DeleteBehavior.Restrict); // Ya da Cascade, SetNull, vs. olabilir
         }
     }
 }

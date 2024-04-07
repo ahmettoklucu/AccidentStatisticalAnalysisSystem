@@ -1,42 +1,40 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.EntityFreamwork.Mapping
 {
-    public class CompanyMap:EntityTypeConfiguration<Company>
+    public class CompanyMap: IEntityTypeConfiguration<Company>
     {
-        public CompanyMap()
+        public void Configure(EntityTypeBuilder<Company> builder)
         {
-            ToTable(@"Companies", "dbo");
-            HasKey(x => x.Id);
-            Property(x=>x.Id).HasColumnName("Id");
-            Property(x=>x.CompanyName).HasColumnName("CompanyName");
-            Property(x=>x.CityId).HasColumnName("CityId");
-            Property(x=>x.NaceId).HasColumnName("NaceId");
-            Property(x => x.CompanyTypeId).HasColumnName("CompanyTypeId");
-            Property(x => x.StartDate).HasColumnName("StartDate");
-            Property(x => x.NumberOfWorkers).HasColumnName("NumberOfWorkers");
-            Property(x => x.IsDelete).HasColumnName("IsDelete");
-            Property(x=>x.UserId).HasColumnName("UserId");
-            Property(x=>x.Image).HasColumnName("Image");
-            Property(x=>x.Status).HasColumnName("Status");
-            HasRequired(x => x.User)
+            builder.ToTable(@"Companies", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x=>x.Id).HasColumnName("Id");
+            builder.Property(x=>x.CompanyName).HasColumnName("CompanyName");
+            builder.Property(x=>x.CityId).HasColumnName("CityId");
+            builder.Property(x=>x.NaceId).HasColumnName("NaceId");
+            builder.Property(x => x.CompanyTypeId).HasColumnName("CompanyTypeId");
+            builder.Property(x => x.StartDate).HasColumnName("StartDate");
+            builder.Property(x => x.NumberOfWorkers).HasColumnName("NumberOfWorkers");
+            builder.Property(x => x.IsDelete).HasColumnName("IsDelete");
+            builder.Property(x=>x.UserId).HasColumnName("UserId");
+            builder.Property(x=>x.Image).HasColumnName("Image");
+            builder.Property(x=>x.Status).HasColumnName("Status");
+            builder.HasOne(x => x.User)
                 .WithMany(x => x.Companies)
                 .HasForeignKey(x => x.UserId)
-                .WillCascadeOnDelete(false);
-            HasRequired(x => x.CompanyType)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.CompanyType)
                 .WithMany(x => x.Companies)
                 .HasForeignKey(x => x.CompanyTypeId)
-                .WillCascadeOnDelete(false);
-            HasRequired(x => x.Nace)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Nace)
                .WithMany(x => x.Companies)
                .HasForeignKey(x => x.NaceId)
-               .WillCascadeOnDelete(false);
+               .OnDelete(DeleteBehavior.Restrict);
              
         }
     }

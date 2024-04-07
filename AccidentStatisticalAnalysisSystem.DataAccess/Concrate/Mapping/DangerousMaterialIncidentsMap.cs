@@ -1,32 +1,28 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class DangerousMaterialIncidentsMap:EntityTypeConfiguration<DangerousMaterialIncident>
+    public class DangerousMaterialIncidentsMap: IEntityTypeConfiguration<DangerousMaterialIncident>
     {
-        public DangerousMaterialIncidentsMap()
+        public void Configure(EntityTypeBuilder<DangerousMaterialIncident> builder)
         {
-            ToTable(@"DangerousMaterialIncidents", "dbo");
-            HasKey(x => new { x.IncidentId, x.DangerousMaterialId });
-            Property(x=>x.IncidentId).HasColumnName("IncidentId");
-            Property(x => x.DangerousMaterialId).HasColumnName("DangerousMaterialId");
-            Property(x=>x.Value).HasColumnName("Value");
+            builder.ToTable(@"DangerousMaterialIncidents", "dbo");
+            builder.HasKey(x => new { x.IncidentId, x.DangerousMaterialId });
+            builder.Property(x=>x.IncidentId).HasColumnName("IncidentId");
+            builder.Property(x => x.DangerousMaterialId).HasColumnName("DangerousMaterialId");
+            builder.Property(x=>x.Value).HasColumnName("Value");
             
-            HasRequired(x => x.Incident)
+            builder.HasOne(x => x.Incident)
                 .WithMany(x => x.DangerousMaterialIncidents)
                 .HasForeignKey(x => x.IncidentId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            HasRequired(x => x.DangerousMaterial)
+            builder.HasOne(x => x.DangerousMaterial)
                 .WithMany(x => x.DangerousMaterialIncidents)
                 .HasForeignKey(x => x.DangerousMaterialId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.Restrict);
         }
         
     }

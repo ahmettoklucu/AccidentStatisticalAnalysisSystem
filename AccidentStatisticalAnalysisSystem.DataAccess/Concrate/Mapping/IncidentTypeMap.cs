@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,21 +10,22 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class IncidentTypeMap:EntityTypeConfiguration<IncidentType>
-    {
-        public IncidentTypeMap()
+ 
+        public class IncidentTypeMap : IEntityTypeConfiguration<IncidentType>
         {
-            ToTable(@"IncidentTypes", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
-            Property(x => x.IncidentTypeCategoryId).HasColumnName("IncidentTypeCategoryId");
+            public void Configure(EntityTypeBuilder<IncidentType> builder)
+            {
+                builder.ToTable("IncidentTypes", "dbo");
+                builder.HasKey(x => x.Id);
+                builder.Property(x => x.Id).HasColumnName("Id");
+                builder.Property(x => x.Name).HasColumnName("Name");
+                builder.Property(x => x.IncidentTypeCategoryId).HasColumnName("IncidentTypeCategoryId");
 
-            HasRequired(x => x.IncidentTypeCategory)
-              .WithMany(x => x.IncidentTypes)
-              .HasForeignKey(x => x.IncidentTypeCategoryId)
-              .WillCascadeOnDelete(false);
-
+                builder.HasOne(x => x.IncidentTypeCategory)
+                    .WithMany(x => x.IncidentTypes)
+                    .HasForeignKey(x => x.IncidentTypeCategoryId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            }
         }
-    }
+    
 }

@@ -1,22 +1,18 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class DangerousMaterialMap : EntityTypeConfiguration<DangerousMaterial>
+    public class DangerousMaterialMap : IEntityTypeConfiguration<DangerousMaterial>
     {
-        public  DangerousMaterialMap()
+        public void Configure(EntityTypeBuilder<DangerousMaterial> builder)
         {
-            ToTable(@"DangerousMaterials", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
+            builder.ToTable(@"DangerousMaterials", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
         }
     }
 }

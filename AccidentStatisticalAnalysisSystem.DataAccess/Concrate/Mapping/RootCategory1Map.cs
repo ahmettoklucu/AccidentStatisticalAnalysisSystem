@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,16 +10,14 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class RootCategory1Map:EntityTypeConfiguration<RootCategory1>
+    public class RootCategory1Map : IEntityTypeConfiguration<RootCategory1>
     {
-        public RootCategory1Map()
+        public void Configure(EntityTypeBuilder<RootCategory1> builder)
         {
-            ToTable(@"RootCategory1", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
-
-
+            builder.ToTable("RootCategory1", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
         }
     }
 }

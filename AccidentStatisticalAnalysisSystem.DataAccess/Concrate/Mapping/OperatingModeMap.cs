@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,14 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class OperatingModeMap:EntityTypeConfiguration<OperatingMode>
+    public class OperatingModeMap : IEntityTypeConfiguration<OperatingMode>
     {
-        public OperatingModeMap()
+        public void Configure(EntityTypeBuilder<OperatingMode> builder)
         {
-            ToTable(@"OperatingModes", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
-
+            builder.ToTable("OperatingModes", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
         }
     }
 }

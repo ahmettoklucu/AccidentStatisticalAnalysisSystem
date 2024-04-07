@@ -12,72 +12,69 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
     public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
         where TEntity : class, IEntity, new()
         where TContext : DbContext, new()
-
     {
-
-
 
         public async Task<TEntity> GetAsyc(Expression<Func<TEntity, bool>> filter)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
-                return await context.Set<TEntity>().SingleOrDefaultAsync(filter);
+                return await _context.Set<TEntity>().SingleOrDefaultAsync(filter);
             }
         }
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
-                return  context.Set<TEntity>().SingleOrDefault(filter);
+                return  _context.Set<TEntity>().SingleOrDefault(filter);
             }
         }
         public async Task<List<TEntity>> GetAllAsyc(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
                 return filter == null
-                    ? await context.Set<TEntity>().AsNoTracking().ToListAsync()
-                    : await context.Set<TEntity>().Where(filter).AsNoTracking().ToListAsync();
+                    ? await _context.Set<TEntity>().AsNoTracking().ToListAsync()
+                    : await _context.Set<TEntity>().Where(filter).AsNoTracking().ToListAsync();
             }
         }
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
                 return filter == null
-                    ?  context.Set<TEntity>().ToList()
-                    :  context.Set<TEntity>().Where(filter).ToList();
+                    ?  _context.Set<TEntity>().ToList()
+                    :  _context.Set<TEntity>().Where(filter).ToList();
             }
         }
 
         public async void DeleteAsyc(TEntity entity)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
-                var deleteEntity = context.Entry(entity);
+                var deleteEntity = _context.Entry(entity);
                 deleteEntity.State = EntityState.Deleted;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task<TEntity> AddAsyc(TEntity entity)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
-                var addedEntity = context.Entry(entity);
+                var addedEntity = _context.Entry(entity);
                 addedEntity.State = EntityState.Added;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return entity;
             }
         }
 
         public async Task<TEntity> UpdateAsyc(TEntity entity)
         {
-            using (TContext context = new TContext())
+            using (TContext _context = new TContext())
             {
-                var updatedEntity = context.Entry(entity);
+                var updatedEntity = _context.Entry(entity);
                 updatedEntity.State = EntityState.Modified;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return entity;
             }
         }

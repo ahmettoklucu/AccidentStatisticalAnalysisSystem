@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,19 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class RootCategory3Map:EntityTypeConfiguration<RootCategory3>
+    public class RootCategory3Map : IEntityTypeConfiguration<RootCategory3>
     {
-        public RootCategory3Map()
+        public void Configure(EntityTypeBuilder<RootCategory3> builder)
         {
-            ToTable(@"RootCategory3", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
-            Property(x => x.RootCategory2Id).HasColumnName("RootCategory2Id");
-            HasRequired(x => x.RootCategory2)
-               .WithMany(x => x.RootCategory3)
-               .HasForeignKey(x => x.RootCategory2Id)
-               .WillCascadeOnDelete(false);
-
+            builder.ToTable("RootCategory3", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
+            builder.Property(x => x.RootCategory2Id).HasColumnName("RootCategory2Id");
+            builder.HasOne(x => x.RootCategory2)
+                .WithMany(x => x.RootCategory3)
+                .HasForeignKey(x => x.RootCategory2Id)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

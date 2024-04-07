@@ -114,7 +114,7 @@ namespace AccidentStatisticalAnalysisSystem.WepApi.Controllers
             }
             return BadRequest(loginResult.Message);
         }
-        //[Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
+        [Authorize(AuthenticationSchemes = "Bearer",Roles ="1")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

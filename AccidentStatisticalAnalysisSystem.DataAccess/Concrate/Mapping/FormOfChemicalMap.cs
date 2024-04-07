@@ -1,4 +1,6 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
@@ -8,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class FormOfChemicalMap:EntityTypeConfiguration<FormOfTheChemical>
+    public class FormOfChemicalMap : IEntityTypeConfiguration<FormOfTheChemical>
     {
-        public FormOfChemicalMap()
+        public void Configure(EntityTypeBuilder<FormOfTheChemical> builder)
         {
-            ToTable(@"FormOfTheChemicals", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
+            builder.ToTable("FormOfTheChemicals", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
         }
     }
 }

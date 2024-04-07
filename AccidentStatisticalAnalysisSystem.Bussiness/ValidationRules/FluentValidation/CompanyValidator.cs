@@ -17,7 +17,7 @@ namespace AccidentStatisticalAnalysisSystem.Bussiness.ValidationRules.FluentVali
             RuleFor(p => p.NaceId).NotEmpty().WithMessage("Nace kodu boş geçilemez.");
             RuleFor(p => p.CityId).NotEmpty().WithMessage("Şehir bilgisi boş geçilemez.");
             RuleFor(p => p.Image).NotEmpty().WithMessage("Resim boş geçilemez.");
-            RuleFor(p => p.UserId).NotEmpty().WithMessage("Resim boş geçilemez.");
+            RuleFor(p => p.UserId).NotEmpty().WithMessage("Kullanıcı boş geçilemez.");
 
             RuleFor(p => p.NumberOfWorkers).GreaterThanOrEqualTo(Convert.ToUInt16(0)).WithMessage("İşçi sayısı 0'dan küçük olamaz.");
 

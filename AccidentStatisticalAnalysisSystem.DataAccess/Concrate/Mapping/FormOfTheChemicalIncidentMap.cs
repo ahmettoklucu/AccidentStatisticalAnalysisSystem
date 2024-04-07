@@ -1,4 +1,6 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
@@ -8,24 +10,25 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class FormOfTheChemicalIncidentMap:EntityTypeConfiguration<FormOfTheChemicalIncident>
+    public class FormOfTheChemicalIncidentMap : IEntityTypeConfiguration<FormOfTheChemicalIncident>
     {
-        public FormOfTheChemicalIncidentMap()
+        public void Configure(EntityTypeBuilder<FormOfTheChemicalIncident> builder)
         {
-            ToTable(@"FormOfTheChemicalIncidents", "dbo");
-            HasKey(x => new { x.IncidentId, x.FormOfTheChemicalId });
-            Property(x => x.IncidentId).HasColumnName("IncidentId");
-            Property(x => x.FormOfTheChemicalId).HasColumnName("FormOfTheChemicalId");
-            Property(x => x.Value).HasColumnName("Value");
+            builder.ToTable("FormOfTheChemicalIncidents", "dbo");
+            builder.HasKey(x => new { x.IncidentId, x.FormOfTheChemicalId });
+            builder.Property(x => x.IncidentId).HasColumnName("IncidentId");
+            builder.Property(x => x.FormOfTheChemicalId).HasColumnName("FormOfTheChemicalId");
+            builder.Property(x => x.Value).HasColumnName("Value");
 
-            HasRequired(x => x.Incident)
-               .WithMany(x => x.FormOfTheChemicalIncidents)
-               .HasForeignKey(x => x.IncidentId)
-               .WillCascadeOnDelete(false);
-            HasRequired(x => x.FormOfTheChemical)
+            builder.HasOne(x => x.Incident)
+                .WithMany(x => x.FormOfTheChemicalIncidents)
+                .HasForeignKey(x => x.IncidentId)
+                .OnDelete(DeleteBehavior.Restrict); // Ya da Cascade, SetNull, vs. olabilir
+
+            builder.HasOne(x => x.FormOfTheChemical)
                 .WithMany(x => x.FormOfTheChemicalIncidents)
                 .HasForeignKey(x => x.FormOfTheChemicalId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.Restrict); // Ya da Cascade, SetNull, vs. olabilir
         }
     }
 }

@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class CityMap:EntityTypeConfiguration<City>
+    public class CityMap: IEntityTypeConfiguration<City>
     {
-        public  CityMap()
+        public void Configure(EntityTypeBuilder<City> builder)
         {
-            ToTable(@"Cities", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.CityName).HasColumnName("Name");
+            builder.ToTable("Cities", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.CityName).HasColumnName("Name");
         }
     }
 }

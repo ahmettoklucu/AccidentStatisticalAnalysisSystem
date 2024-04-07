@@ -1,4 +1,6 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
@@ -8,22 +10,20 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class SuggestionMap:EntityTypeConfiguration<Suggestion>
+    public class SuggestionMap : IEntityTypeConfiguration<Suggestion>
     {
-        public SuggestionMap()
+        public void Configure(EntityTypeBuilder<Suggestion> builder)
         {
-            ToTable(@"Suggestion", "dbo");
-            HasKey(x=>x.Id);
-            Property(x=>x.Id).HasColumnName("RootId");
-            Property(x => x.GYSAspect).HasColumnName("GYSAspect");
-            Property(x => x.BasisOfLaw).HasColumnName("BasisOfLaw");
-            Property(x => x.BaseMaterial).HasColumnName("BaseMaterial");
-            Property(x => x.LawName).HasColumnName("LawName");
-            Property(x => x.LawMaterial).HasColumnName("LawMaterial");
-            Property(x => x.LawDescription).HasColumnName("LawDescription");
-            Property(x => x.Other).HasColumnName("Other");
-
-
+            builder.ToTable("Suggestion", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("RootId");
+            builder.Property(x => x.GYSAspect).HasColumnName("GYSAspect");
+            builder.Property(x => x.BasisOfLaw).HasColumnName("BasisOfLaw");
+            builder.Property(x => x.BaseMaterial).HasColumnName("BaseMaterial");
+            builder.Property(x => x.LawName).HasColumnName("LawName");
+            builder.Property(x => x.LawMaterial).HasColumnName("LawMaterial");
+            builder.Property(x => x.LawDescription).HasColumnName("LawDescription");
+            builder.Property(x => x.Other).HasColumnName("Other");
         }
     }
 }

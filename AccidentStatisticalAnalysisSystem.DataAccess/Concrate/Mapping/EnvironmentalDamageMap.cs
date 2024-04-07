@@ -1,4 +1,5 @@
 ﻿using AccidentStatisticalAnalysisSystem.Entities.Concrate;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
@@ -9,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Mapping
 {
-    public class EnvironmentalDamageMap:EntityTypeConfiguration<EnvironmentalDamage>
+    public class EnvironmentalDamageMap : IEntityTypeConfiguration<EnvironmentalDamage>
     {
         public void Configure(EntityTypeBuilder<EnvironmentalDamage> builder)
         {
-            ToTable(@"EnvironmentalDamageS", "dbo");
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasColumnName("Id");
-            Property(x => x.Name).HasColumnName("Name");
-            Property(x => x.EnvironmentalDamageCategoryId).HasColumnName("EnvironmentalDamageCategoryId");
-            HasRequired(x => x.EnvironmentalDamageCategory)
+            builder.ToTable("EnvironmentalDamages", "dbo");
+            builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).HasColumnName("Id");
+            builder.Property(x => x.Name).HasColumnName("Name");
+            builder.Property(x => x.EnvironmentalDamageCategoryId).HasColumnName("EnvironmentalDamageCategoryId");
+            builder.HasOne(x => x.EnvironmentalDamageCategory)
                 .WithMany(x => x.EnvironmentalDamage)
                 .HasForeignKey(x => x.EnvironmentalDamageCategoryId)
-                .WillCascadeOnDelete(false);
+                .OnDelete(DeleteBehavior.Restrict); // Ya da Cascade, SetNull, vs. olabilir
         }
     }
 }
