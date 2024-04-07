@@ -9,7 +9,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate
 {
     public class AsascContext : DbContext
     {
-        public AsascContext(DbContextOptions<AsascContext> options) : base(options)
+        public AsascContext() : base()
         {
         }
         public DbSet<City> Cities { get; set; }

@@ -1,12 +1,8 @@
 ﻿using AccidentStatisticalAnalysisSystem.DataAccess.Abstract.IRepository;
 using AccidentStatisticalAnalysisSystem.Entities;
 using AccidentStatisticalAnalysisSystem.Entities.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
 {
@@ -14,7 +10,7 @@ namespace AccidentStatisticalAnalysisSystem.DataAccess.Concrate.Repository
         where T : class, IEntity, new()
     {
         private DbContext _context;
-        private IDbSet<T> _entities;
+        private DbSet<T> _entities;
         public EfQueryableRepository(DbContext context)
         {
             _context = context;
